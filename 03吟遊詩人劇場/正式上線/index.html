@@ -1,0 +1,353 @@
+<!doctype html><html lang="zh-Hant"><head><base href="../"><meta name="integration-source" content="吟遊詩人劇場_歌曲探索_v1.4.html"><script>(function(){
+ 'use strict';
+ const params=new URLSearchParams(location.hash.slice(1)),channel=params.get('channel'),parentOrigin=params.get('parentOrigin');
+ const valid=parent!==window&&/^[a-f0-9]{32}$/.test(channel||'')&&/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(parentOrigin||'');
+ const protocol='social-explorer-v1',pending=new Map();let serial=0;
+ function request(method,payload){return new Promise((resolve,reject)=>{if(!valid){reject(Error('LOGIN_REQUIRED'));return;}const id=String(++serial),timer=setTimeout(()=>{pending.delete(id);reject(Error('PARENT_UNAVAILABLE'));},45000);pending.set(id,{resolve,reject,timer});parent.postMessage({protocol,channel,id,method,payload},parentOrigin);});}
+ window.addEventListener('message',e=>{const m=e.data;if(!valid||e.source!==parent||e.origin!==parentOrigin||m?.protocol!==protocol||m.channel!==channel||m.type!=='response'||!pending.has(m.id))return;const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);if(m.ok)p.resolve(m.value);else p.reject(Error(m.error||'PARENT_UNAVAILABLE'));});
+ // 正式入口即使被單獨開啟，也必須經過首頁的 Google 驗證。
+ window.SocialGameHost=Object.freeze({preview:false,getProfile:()=>request('getProfile'),getGameSettings:id=>request('getGameSettings',id),getSongUnlocks:()=>request('getSongUnlocks'),saveResult:r=>request('saveResult',r),savePractice:r=>request('savePractice',r),goHome:()=>{request('goHome').catch(()=>{});}});
+})();
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#88634e"><title>吟遊詩人劇場｜社會歌謠聆聽趣</title><style>:root{color-scheme:light;--ink:#4e3d2e;--muted:#816c54;--red:#986b54;--red-dark:#76503c;--sage:#66765a;--line:#c9b28a;font-family:"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-width:320px;background:#e9d5b5;color:var(--ink)}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default;opacity:.58}button:focus-visible{outline:3px solid #286c89;outline-offset:4px}[hidden]{display:none!important}.scene{position:fixed;inset:0;background:linear-gradient(#fae8ca18,#66482c33),url("網頁用圖/background.webp") center/cover no-repeat;pointer-events:none;z-index:0}.shell{position:relative;z-index:1;max-width:1600px;padding:18px 4% 12px;margin:auto}.topbar{display:flex;align-items:center;gap:12px;min-height:42px}.brand{font-size:12px;letter-spacing:.12em;background:#fff6dfeb;border:1px solid #bba27e;border-radius:7px;padding:10px 13px}.mode{margin-left:auto;background:#fff7e5ed;border:1px solid #d0b791;border-radius:20px;font-size:11px;padding:6px 10px}.primary,.secondary{border:1px solid var(--red-dark);border-radius:7px;min-height:43px;padding:10px 16px;letter-spacing:.04em;font-size:13px;white-space:nowrap}.primary{background:var(--red);color:#fff8e7;box-shadow:0 2px 3px #62412a22}.secondary{background:#fff7e6;border-color:#bfa581}.text-button{border:0;background:transparent;text-decoration:underline;text-underline-offset:5px;min-height:34px;font-size:12px;padding:5px 7px}.picker{display:flex;align-items:center;flex-direction:column;padding:20px 0 15px}.title-art{width:min(580px,65vw);margin:0}.title-art img{display:block;width:100%;height:auto}.picker-intro{background:#fff7e6e3;border:1px solid #cbb38d;border-radius:8px;font-size:16px;letter-spacing:.15em;text-align:center;line-height:1.8;padding:9px 26px;margin:0 0 28px}.picker-intro span{display:block;letter-spacing:.05em;font-size:12px;color:#877051}.periods{width:min(1050px,100%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 27px;padding:8px 0}.period-card{position:relative;background:#fff5dccf;border:1px solid #c0a477;border-radius:13px;padding:23px 13px 10px;box-shadow:0 7px 18px #5a3e2738;transition:transform .15s}.period-card:before,.period-card:after{content:"";position:absolute;top:-19px;height:40px;width:2px;background:#a18158;box-shadow:1px 0 #e4c995;z-index:0}.period-card:before{left:20%}.period-card:after{right:20%}.period-card img{display:block;position:relative;width:100%;height:auto;z-index:1}.period-card small{display:block;text-align:center;font-size:11px;letter-spacing:.1em;background:#66765a;color:#fff9e9;border-radius:20px;width:max-content;margin:9px auto 0;padding:5px 13px}.period-card:disabled{opacity:1;background:#ede3cddf}.period-card:disabled img{filter:saturate(.3);opacity:.78}.period-card:disabled small{background:#b4a17f;color:#fffaf0}.period-card:not(:disabled):hover{transform:translateY(-4px)}.picker-note{background:#fff6e1e6;border-radius:18px;padding:8px 18px;font-size:11px;text-align:center;color:#7e694c;margin:20px 0 0}.song-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 12px;background:#fff6e4eb;border:1px solid #c2a67f;border-radius:11px;padding:9px 20px}.song-header>div{display:flex;align-items:baseline;gap:14px}.eyebrow{font-size:11px;letter-spacing:.12em;color:#71815e;margin:0 0 5px}.song-header .eyebrow{display:none}.song-header h1{font-family:"DFKai-SB","BiauKai","Microsoft JhengHei",serif;font-size:29px;letter-spacing:.1em;margin:0}.song-header span{font-size:12px;color:#8b7255}.play-paper,.finish-paper{background:linear-gradient(125deg,#fff9eaf5,#f6e6c7f5);border:1px solid #b49a70;border-radius:16px;padding:16px 22px 10px;box-shadow:0 10px 30px #4c34273b,inset 0 0 0 4px #fff8e555}.stats{display:flex;align-items:center;gap:25px;border-bottom:1px solid #cbb28b99;padding-bottom:11px}.stats>div{display:flex;align-items:baseline;gap:9px}.stats small{font-size:11px;color:#866e51}.stats strong{font-size:15px;font-variant-numeric:tabular-nums}.stats-tools{margin-left:auto}.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;list-style:none;padding:0;margin:13px 0 17px}.steps li{height:5px;background:#d8c7a9;border-radius:4px}.steps li.current{background:#b68962}.steps li.done{background:#81936d}.play-layout{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:28px;align-items:start}.section-heading h2{font-size:20px;letter-spacing:.05em;margin:0 0 8px}.section-heading .eyebrow{margin-bottom:4px}.video-surround{position:relative;padding:15px 13px 17px;margin:24px 0 14px}.video-decoration{position:absolute;inset:-32px -24px;width:calc(100% + 48px);height:calc(100% + 64px);object-fit:fill;pointer-events:none;z-index:0}.video-surround video{display:block;position:relative;z-index:1;width:100%;aspect-ratio:16/9;background:#2e2822;border:1px solid #8f7153;border-radius:4px;object-fit:contain}.video-buttons{display:flex;gap:9px;align-items:center;justify-content:center}.video-buttons>button{flex:1}.listen-status{font-size:12px;line-height:1.8;margin:12px 0;color:#776246;min-height:42px}.quiet{font-size:10px;color:#9a8465;text-align:center;line-height:1.8;margin:8px 0 0}.video-note,.credits{font-size:10px;line-height:1.8;color:#8e7a5b;margin:8px 0 0;text-align:center}.credits{font-size:9px;color:#a18e71}.answer-panel{border-left:1px solid #ccb18c;padding-left:25px;min-width:0}.question-paper{background:#fff7e9aa;border:1px solid #d1b88d;border-radius:12px;padding:18px;min-height:330px;box-shadow:inset 0 0 22px #c9ac6b13}.answer-placeholder{display:grid;align-content:center;text-align:center;min-height:280px;color:#9b8460;line-height:2}.answer-placeholder strong{font-family:"DFKai-SB","BiauKai",serif;font-size:22px;font-weight:400}.answer-placeholder p{font-size:12px}.answer-instruction{font-size:11px;line-height:1.8;color:#8b7351;margin:0 0 14px}.sentence{font-size:19px;font-weight:600;line-height:3.3;color:#59412e}.blank-wrap{display:inline-flex;align-items:center;vertical-align:middle;gap:2px;margin:3px 5px;line-height:1.4}.blank{background:#f4e7cd;border:1.5px dashed #bca078;border-radius:6px;min-width:82px;min-height:43px;padding:8px 12px;font-size:16px;font-weight:600;line-height:1.4}.blank.filled{border-style:solid;background:#fff8e8;border-color:#b89a6b}.blank.wrong{border-color:#a65d45;background:#f3ded2}.blank.correct{border-color:#6e875e;background:#e8ecd9;opacity:1;color:#4c653f}.blank.selected,.word.selected{outline:3px solid #286c89;outline-offset:2px}.return-word{background:transparent;border:0;font-size:14px;min-width:28px;min-height:40px;color:#95734d;padding:3px}.selection{font-size:11px;line-height:1.8;color:#788260;margin:12px 0 8px}.word-bank{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;align-content:start;touch-action:pan-y}.word{background:linear-gradient(110deg,#fff4d8,#f1d9b0);border:1px solid #bb9965;border-radius:7px;min-height:43px;padding:9px 14px;font-size:14px;font-weight:600;box-shadow:0 2px 3px #61452714;touch-action:pan-y}.word:hover{background:#fff5db}.answer-actions{display:flex;gap:8px;justify-content:flex-end;border-top:1px solid #d5bd9488;padding-top:14px;margin-top:15px}.answer-actions .secondary{font-size:11px;padding:8px 10px}.answer-actions .primary{min-width:100px}.feedback-area{border-top:1px solid #ccb18b99;display:flex;align-items:center;gap:14px;margin-top:16px;padding-top:13px;min-height:55px}.feedback{font-size:13px;line-height:1.9;margin:0;flex:1;color:#7d6547}.feedback[data-tone=wrong]{color:#9c503a}.feedback[data-tone=good]{color:#506e40}.knowledge{background:#e4e8d26e;border:1px solid #bec7a580;border-radius:8px;padding:11px 14px;font-size:13px;line-height:1.9;color:#64734d;margin:10px 0 0}.scoring-note{text-align:center;font-size:10px;line-height:1.8;color:#907856;margin:10px 0 0}.page-foot{text-align:center;color:#fff6dc;text-shadow:0 1px 3px #4f3526;font-size:11px;letter-spacing:.1em;margin:13px 0 0}.drag-ghost{position:fixed;pointer-events:none;z-index:10000;transform:translate(-50%,-50%) rotate(-3deg);opacity:.93;filter:drop-shadow(0 9px 12px #48302355)}.drag-ghost *{pointer-events:none}.drag-source{opacity:.4}.drop-hover{outline:3px solid #2c718b;outline-offset:3px}.finish-intro{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:3px 0 22px}.finish-intro h2{font-size:26px;margin:5px 0}.finish-intro p,.muted{font-size:12px;color:#897154;line-height:1.8}.finish-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;margin-bottom:22px}.finish-grid h2{font-size:20px;margin:4px 0 10px}.finish-grid video{width:100%;aspect-ratio:16/9;background:#2d2723;border-radius:7px}.bonus-panel{background:#fff6e4aa;border:1px solid #ccb188;border-radius:12px;padding:20px}.bonus-panel p{font-size:13px;line-height:1.9}.bonus-bank{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.bonus-word{background:#fff4d8;border:1px solid #baa071;border-radius:7px;min-height:47px;padding:10px;font-size:14px}.bonus-word[aria-pressed=true]{background:#e5ead3;border:2px solid #768a62}.bonus-word:disabled{opacity:1}.finish-paper{padding-bottom:20px}dialog{width:490px;max-width:92vw;max-height:90dvh;overflow:auto;padding:0;color:var(--ink);border:1px solid #b3976b;border-radius:18px;background:linear-gradient(120deg,#fffbef,#f3e3c1);box-shadow:0 24px 85px #31271e66,inset 0 0 0 5px #fff9e766}dialog::backdrop{background:#3d352c80;backdrop-filter:blur(4px)}.dialog-content{position:relative;padding:33px 35px;text-align:center}.dialog-content h2{font-size:26px;line-height:1.6;letter-spacing:.04em;margin:12px 0}.dialog-content p{font-size:14px;line-height:1.9;color:#826b4d}.close{position:absolute;top:6px;right:8px;border:0;background:transparent;width:44px;height:44px;font-size:26px;color:#886b4c}.help-list{text-align:left;padding-left:23px;font-size:14px;color:#735d43;line-height:2}.intro-note{background:#e5e6cf80;border:1px solid #bdc5a480;border-radius:7px;padding:10px;font-size:12px!important}.wide{width:100%;margin-top:10px}.button-row{display:flex;justify-content:center;gap:10px;margin-top:16px}.button-row button{flex:1}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin:20px 0}.result-stats>div{background:#fff9eab3;border:1px solid #cfb992;border-radius:9px;padding:15px 5px}.result-stats small{display:block;font-size:12px;color:#8d7655;margin-bottom:8px}.result-stats strong{font-size:27px;color:#6c7c51;font-variant-numeric:tabular-nums}.result-message,.save-status{font-size:12px!important}.save-status{color:#60784d!important}
+@media(min-width:1600px){.play-paper{padding:20px 28px 14px}.play-layout{gap:36px}.answer-panel{padding-left:32px}.question-paper{padding:24px;min-height:400px}.sentence{font-size:23px;line-height:3.1}.blank{font-size:19px;min-height:47px}.word{font-size:16px;min-height:47px}.section-heading h2{font-size:23px}.video-surround{margin-top:35px}.listen-status{font-size:14px}.answer-instruction{font-size:12px}.title-art{width:650px}.periods{width:1150px;gap:35px}.period-card{padding:26px 16px 13px}.period-card small{font-size:12px}}
+@media(max-width:1100px){.shell{padding:15px 3% 10px}.play-paper{padding:14px 16px 9px}.play-layout{gap:18px}.answer-panel{padding-left:17px}.section-heading h2{font-size:17px}.question-paper{padding:13px;min-height:320px}.sentence{font-size:17px;line-height:3.2}.blank{font-size:14px;padding:7px 9px;min-width:70px}.word{font-size:13px;padding:8px 11px}.stats{gap:17px}.stats>div{gap:6px}.stats strong{font-size:13px}.stats small{font-size:10px}.stats-tools .text-button{font-size:11px;padding:5px}.primary,.secondary{font-size:12px;padding:10px 12px}.video-buttons{gap:6px}.video-buttons button{font-size:11px;padding:9px}.brand{font-size:11px}.video-surround{padding:14px 9px;margin-top:23px}.video-decoration{inset:-25px -16px;width:calc(100% + 32px);height:calc(100% + 50px)}.answer-actions .secondary{font-size:10px;padding:8px}.answer-actions .primary{font-size:11px;min-width:85px}.title-art{width:57vw}.periods{gap:26px 17px}.period-card{padding:20px 9px 9px}.song-header h1{font-size:26px}.picker-intro{font-size:14px}}
+@media(max-width:760px){.shell{padding:12px 13px}.topbar{gap:6px;flex-wrap:wrap}.brand{font-size:10px;letter-spacing:0;padding:8px}.mode{font-size:9px;padding:5px 8px}.topbar .secondary{font-size:10px;padding:8px;min-height:37px}.picker{padding-top:25px}.title-art{width:90vw}.picker-intro{font-size:14px;padding:8px 13px;margin-top:10px;margin-bottom:26px}.picker-intro span{font-size:10px}.periods{grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 13px}.period-card{padding:15px 6px 8px}.period-card small{font-size:9px;padding:4px 9px;margin-top:6px}.picker-note{font-size:10px;line-height:1.8;padding:8px 13px}.song-header{padding:9px 12px}.song-header>div{display:block}.song-header h1{font-size:25px}.song-header span{font-size:10px}.stats{gap:8px;flex-wrap:wrap;justify-content:space-between}.stats>div{display:block}.stats small{display:block;margin-bottom:4px}.stats .stats-tools{width:100%;display:flex;justify-content:flex-end;border-top:1px solid #cdb58d88;padding-top:3px}.play-layout,.finish-grid{grid-template-columns:1fr;gap:25px}.answer-panel{padding:16px 0 0;border-left:0;border-top:1px solid #ccb18c}.sentence{font-size:18px}.question-paper{padding:15px;min-height:260px}.answer-placeholder{min-height:230px}.video-surround{margin:25px 0 15px}.video-decoration{inset:-24px -14px;width:calc(100% + 28px);height:calc(100% + 48px)}.section-heading h2{font-size:19px}.listen-status{font-size:12px}.video-buttons button{font-size:12px}.feedback-area{display:block}.feedback-area button{width:100%;margin-top:12px}.feedback{font-size:12px}.knowledge{font-size:12px}.finish-intro{display:block}.finish-intro h2{font-size:24px}.finish-intro button{margin-top:10px}.bonus-panel{padding:17px}.dialog-content{padding:29px 23px}.dialog-content h2{font-size:23px}.dialog-content p,.help-list{font-size:13px}.result-stats strong{font-size:24px}.button-row{gap:8px}.button-row button{font-size:11px;padding:10px}.scoring-note{font-size:9px}.answer-actions{justify-content:space-between}}
+.video-decoration{object-fit:contain}.earned{font-size:10px;line-height:1;color:#74855a;align-self:flex-end;margin-bottom:5px}.question-paper{position:relative;isolation:isolate}.question-paper:before{content:"";position:absolute;inset:0;background:url("網頁用圖/question-paper.webp") center/contain no-repeat;opacity:.13;z-index:-1;pointer-events:none}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.supplement{padding:12px 16px;margin:0 0 16px;border-left:4px solid #94704c;background:#fff8e9;color:#4b3b2b;font-size:.95rem;line-height:1.7;}
+
+/* The existing stage art surrounds the intact 16:9 video through nine-slice borders. */
+.video-surround{margin:14px 0 8px;padding:0;border-style:solid;border-color:transparent;border-width:60px 45px 35px;border-image-source:url("網頁用圖/video-frame.webp");border-image-slice:240 270 150 280;border-image-repeat:stretch;isolation:isolate}
+.video-window{position:relative;aspect-ratio:16/9;background:#2e2822}
+.video-surround video{width:100%;height:100%;aspect-ratio:16/9;border:0;border-radius:0;object-fit:contain;z-index:0}
+.center-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:28px;background:#76503ce8;box-shadow:0 2px 14px #36221550;font-size:13px;min-height:48px;padding:10px 20px}
+.center-play:before{content:"▶";font-size:16px}
+.listen-status{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.clip-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;font-size:10px;line-height:1.7;color:#8b755a;margin:5px 0 0}
+.answer-placeholder #start-answer{margin:16px auto 0;min-width:150px}
+.answer-actions{display:flex;justify-content:flex-end;align-items:center;gap:7px;flex-wrap:wrap}
+.answer-actions #next{margin:0;width:auto;min-width:100px}
+.compact-feedback{border:0;margin:10px 1px 0;min-height:0;line-height:1.7}
+.answer-panel .knowledge{margin:9px 0 0;padding:10px 12px}
+@media(max-width:1100px){.video-surround{border-width:48px 34px 28px;margin-top:12px}.answer-actions>button{font-size:10px!important;padding:8px!important;min-width:0!important}.center-play{font-size:11px;padding:8px 13px;min-height:42px}}
+@media(max-width:760px){.video-surround{border-width:43px 29px 25px;margin:12px 0 7px}.answer-placeholder #start-answer{min-height:45px}.answer-actions{gap:5px}.clip-meta{font-size:9px}.play-layout{gap:16px}}
+
+/* A complete transparent image overlaps the video. The curtains and hanging sign stay intact. */
+.video-surround{position:relative;aspect-ratio:1.42;margin:14px 0 8px;padding:0;border:0;border-image:none;isolation:isolate}
+.video-window{position:absolute;inset:23% 12% 16.8%;aspect-ratio:auto;z-index:0;background:transparent;isolation:isolate}
+.video-surround video{position:absolute;inset:0;display:block;margin:0;width:100%;height:100%;max-width:100%;aspect-ratio:auto;z-index:0;border:0;border-radius:0;object-fit:contain}
+.stage-overlay{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill;z-index:10;pointer-events:none;border:0;border-image:none;user-select:none}
+.center-play{z-index:2;max-width:95%}
+.mv-dialog{width:880px}.mv-dialog video{display:block;width:100%;aspect-ratio:16/9;background:#26221e;object-fit:contain;border-radius:6px}.mv-dialog .dialog-content{padding-top:24px}.mv-dialog .dialog-content p{font-size:12px}.mv-dialog h2{font-size:23px}
+@media(max-width:1100px){.video-surround{padding:0;border:0;margin-top:12px}.center-play{font-size:11px;padding:8px 13px;min-height:42px}}
+@media(max-width:760px){.video-surround{padding:0;border:0;margin:12px 0 7px}.stats-tools{flex-wrap:wrap}.mv-dialog .dialog-content{padding:24px 14px 18px}}
+.song-settings-status{font-size:12px;line-height:1.8;text-align:center;color:#805a3b}.song-settings-status button{margin-left:10px}
+</style></head><body>
+<div class="scene" aria-hidden="true"></div><div class="shell"><header class="topbar"><span class="brand">社會科時空探索局</span><span class="mode" id="mode">試玩・本機紀錄</span><button type="button" class="secondary" id="home">返回大地圖</button></header>
+<main id="picker" class="picker" aria-label="六個歷史時期的歌曲掛軸"><h1 class="title-art"><img src="網頁用圖/title.webp" alt="吟遊詩人劇場" width="2172" height="724"></h1><p class="picker-intro">社會歌謠聆聽趣<span>讓旋律帶路，聽見臺灣的歷史故事。</span></p><div id="periods" class="periods"></div><p class="song-settings-status"><span id="song-settings-status" role="status"></span><button id="retry-song-settings" class="text-button" type="button" hidden>重新讀取開放範圍</button></p></main>
+<main id="game" hidden aria-label="歌曲聆聽與歷史填空"><section class="song-header"><div><p class="eyebrow">吟遊詩人劇場</p><h1 id="song-title"></h1><span id="period-label"></span></div><button class="secondary" type="button" id="back-picker">返回掛軸</button></section><section class="play-paper"><div class="stats"><div><small>歌曲進度</small><strong id="stage-count">1／6 段</strong></div><div><small>填空作答時間</small><strong id="timer" role="timer">00:00</strong></div><div><small>批改次數</small><strong id="attempts">0 次</strong></div><div class="stats-tools"><button class="text-button" id="watch-full" type="button" hidden>完整 MV</button><button class="text-button" id="help" type="button">玩法與計分</button><button class="text-button" id="restart" type="button">重新挑戰</button></div></div><ol id="steps" class="steps" aria-label="六段歌曲進度"></ol>
+<div class="play-layout"><section class="listening" aria-labelledby="clip-title"><div class="section-heading"><span class="eyebrow">先聽一段故事</span><h2 id="clip-title"></h2></div><div class="video-surround"><div class="video-window"><video id="video" preload="metadata" controlslist="nodownload noplaybackrate" playsinline aria-label="歌曲片段播放器"></video><button class="primary center-play" id="play-clip" type="button">播放本段</button></div><img class="stage-overlay" src="網頁用圖/video-frame.webp" alt="" aria-hidden="true" width="1672" height="941"></div><p class="listen-status" id="listen-status" role="status">按下播放，先聽完這段歌曲。</p><p class="clip-meta"><span id="watch-progress">聆聽進度 0 秒</span><span aria-hidden="true">｜</span><span title="影片：莊典亮教師與南一出版社教學素材；完整製作名單保留於原影片。">影片：莊典亮教師與南一出版社教學素材</span></p></section>
+<section class="answer-panel" aria-labelledby="answer-title"><div class="section-heading"><span class="eyebrow">再找歷史的線索</span><h2 id="answer-title">把聽見的重點放回故事</h2></div><div class="question-paper"><div id="answer-placeholder" class="answer-placeholder"><strong>讓旋律先說一段故事。</strong><p>聽完這段後，這裡就會展開歷史填空。</p><button class="primary" id="start-answer" type="button" disabled>聽完後開始填空</button></div><div id="answer-content" hidden><p class="answer-instruction">先選詞卡，再點空格；電腦也能拖曳。已答對的空格會保留。</p><p id="supplement" class="supplement" hidden></p><div id="sentence" class="sentence"></div><p id="selection" class="selection" role="status">選一張詞卡，找回這段歷史的重點。</p><div id="word-bank" class="word-bank"></div><div class="answer-actions"><button class="secondary" id="clear-unlocked" type="button">取回未確認詞卡</button><button class="primary" id="check" type="button" disabled>先填滿空格</button><button class="primary" type="button" id="next" disabled>前往下一段</button></div></div></div><p class="feedback compact-feedback" id="feedback" role="status" aria-live="polite">準備好後，播放這一段歌曲。</p><aside class="knowledge" id="knowledge" hidden></aside></section></div>
+</section></main>
+<main id="finished" hidden aria-label="歌曲完成後的完整影片與額外練習"><section class="song-header"><div><p class="eyebrow">吟遊詩人劇場</p><h1 id="finished-title"></h1><span>六段故事，全部完成。</span></div><button class="secondary" id="finish-back" type="button">返回掛軸</button></section><section class="finish-paper"><div class="finish-intro"><div><span class="eyebrow">旋律裡的歷史，已經串起來了</span><h2>這首歌的探索完成！</h2><p>完整 MV 與額外練習，現在都開放了。</p></div><button class="primary" id="result-open" type="button">查看探索成果</button></div><div class="finish-grid"><section><h2>完整 MV</h2><p class="muted">重聽整首歌，讓故事再走一遍。</p><video id="full-video" preload="none" controls playsinline aria-label="解鎖的完整歌曲影片"></video><p class="credits">影片：莊典亮教師與南一出版社教學素材。原影片及製作名單完整保留；此區播放不影響本次成績。</p></section><section class="bonus-panel"><span class="eyebrow">額外練習・不影響歌曲排行榜</span><h2 id="bonus-title">額外練習</h2><p id="bonus-prompt"></p><div id="bonus-bank" class="bonus-bank"></div><div class="video-buttons"><button class="primary" id="bonus-check" type="button">確認分類</button><button class="secondary" id="bonus-clear" type="button">取消選取</button></div><p id="bonus-feedback" class="feedback" role="status"></p></section></div><button class="secondary" id="again" type="button">重新挑戰這首歌</button></section></main><p class="page-foot">每一首歌，都藏著一段等待你發現的歷史。</p></div>
+<dialog id="intro" aria-labelledby="intro-title"><div class="dialog-content"><button class="close" id="intro-close" type="button" aria-label="返回掛軸">×</button><span class="eyebrow">一起聽見歷史</span><h2 id="intro-title"></h2><p>每首歌有六個片段。<br>聽完一段，再用詞卡完成歷史重點。</p><ol class="help-list"><li>每段由你按下播放，聽完才能填空。</li><li>答錯可以重聽、修改，全部答對再往前。</li><li>每格首次答對得滿分，重試依序得 80%、60%、40%。</li></ol><p class="intro-note">影片播放與重播不計時；額外練習另記成果，不影響主關分數。</p><button class="primary wide" id="start-song" type="button">進入這首歌</button></div></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content"><button class="close" data-close="help-dialog" type="button" aria-label="關閉玩法說明">×</button><span class="eyebrow">給小小聆聽者的提醒</span><h2 id="help-title">怎麼探索與計分？</h2><ol class="help-list"><li>聽完片段，按「開始填空」。</li><li>先選詞卡再點空格；放錯可取回、交換。</li><li>填滿後批改；答對的格子會固定，其他格子可以重試。</li><li>每格依答對次數取得 100%、80%、60%、40%，第四次以後維持 40%。</li><li>六段全部完成後，依所有空格取得的分數換算成百分制。</li></ol><p>作答時間只在填空期間累計；播放、重播、載入及過關後閱讀補充都不計時。查看本說明時若正在填空，作答時間持續計算。</p><button class="primary wide" data-close="help-dialog" type="button">我知道了</button></div></dialog>
+<dialog id="confirm" aria-labelledby="confirm-title"><div class="dialog-content"><h2 id="confirm-title"></h2><p id="confirm-text"></p><div class="button-row"><button class="secondary" id="confirm-cancel" type="button">繼續這首歌</button><button class="primary" id="confirm-ok" type="button">確認</button></div></div></dialog>
+<dialog id="result" aria-labelledby="result-title"><div class="dialog-content result-content"><button class="close" data-close="result" type="button" aria-label="查看解鎖內容">×</button><span class="eyebrow" id="result-song"></span><h2 id="result-title">旋律走完，故事留下。</h2><div class="result-stats"><div><small>本次成績</small><strong id="result-score"></strong></div><div><small>填空作答時間</small><strong id="result-time"></strong></div><div><small>首次答對空格</small><strong id="result-first"></strong></div><div><small>批改次數</small><strong id="result-checks"></strong></div></div><p class="result-message">分數包含重試後取得的分數；影片播放、重播及額外練習時間已排除。</p><p id="save-status" class="save-status" role="status"></p><button class="text-button" id="retry-save" type="button" hidden>重試儲存成績</button><div class="button-row"><button class="secondary" data-close="result" type="button">看完整 MV 與練習</button><button class="primary" id="result-back" type="button">返回掛軸</button></div></div></dialog>
+<dialog id="mv-dialog" class="mv-dialog" aria-labelledby="mv-title"><div class="dialog-content"><button class="close" data-close="mv-dialog" type="button" aria-label="關閉完整 MV，返回本段">×</button><h2 id="mv-title">完整 MV</h2><video id="unlocked-video" preload="none" controls playsinline aria-label="已通關歌曲的完整 MV"></video><p>影片：莊典亮教師與南一出版社教學素材</p><p class="muted">原影片與製作名單完整保留。觀看時暫停作答計時；關閉後回到原本的片段與填空。</p><button class="primary" data-close="mv-dialog" type="button">返回本段</button></div></dialog>
+<dialog id="home-info" aria-labelledby="home-title"><div class="dialog-content"><h2 id="home-title">返回冒險大地圖</h2><p>這是獨立試玩頁。請切換回已開啟的大地圖分頁，繼續其他探索。</p><button class="primary wide" data-close="home-info" type="button">繼續聽歌探索</button></div></dialog>
+<noscript><p>請開啟 JavaScript，才能進行歌曲填空。</p></noscript><script>(function(root){
+  'use strict';
+  const RULES='song-retry-100-80-60-40-v1';
+  function shuffle(a,random=Math.random){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.min(i,Math.max(0,Math.floor(random()*(i+1))));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function createRound(song,now=Date.now(),id=''){
+    if(!song||!Array.isArray(song.clips)||song.clips.length!==6)throw new Error('Expected six audited clips');
+    return {id,songId:song.id,current:0,startedAt:now,completedAt:null,done:false,activeMs:0,activeSince:null,videoMs:0,
+      stages:song.clips.map(c=>({clipId:c.id,watched:false,values:c.answers.map(()=>null),locked:c.answers.map(()=>false),wrong:c.answers.map(()=>0),earned:c.answers.map(()=>0),first:c.answers.map(()=>null),checks:[],done:false}))};
+  }
+  function stage(s){return s.stages[s.current];}
+  function pause(s,now){if(s.activeSince!==null){s.activeMs+=Math.max(0,now-s.activeSince);s.activeSince=null;}}
+  function resume(s,now){if(!s.done&&stage(s)?.watched&&!stage(s)?.done&&s.activeSince===null)s.activeSince=now;}
+  function elapsed(s,now=Date.now()){return s.activeMs+(s.activeSince!==null?Math.max(0,now-s.activeSince):0);}
+  function markWatched(s){if(!s.done&&stage(s))stage(s).watched=true;}
+  function allowedWords(clip){return [...new Set([...clip.answers,...clip.extra])];}
+  function place(s,clip,word,index){
+    const t=stage(s);if(s.done||!t?.watched||t.done||!Number.isInteger(index)||index<0||index>=t.values.length||t.locked[index]||!allowedWords(clip).includes(word))return false;
+    const from=t.values.indexOf(word);if(from>=0&&t.locked[from])return false;
+    if(from>=0&&from!==index)t.values[from]=t.values[index];t.values[index]=word;return true;
+  }
+  function takeBack(s,index){const t=stage(s);if(s.done||!t?.watched||t.done||t.locked[index]||!Number.isInteger(index)||index<0||index>=t.values.length)return false;t.values[index]=null;return true;}
+  function evaluate(clip,values){
+    const correct=clip.answers.map((answer,i)=>answer===values[i]);
+    for(const group of clip.unordered||[]){
+      const counts=new Map();for(const i of group)counts.set(clip.answers[i],(counts.get(clip.answers[i])||0)+1);
+      for(const i of group){const value=values[i],n=counts.get(value)||0;correct[i]=n>0;if(n>0)counts.set(value,n-1);}
+    }
+    return correct;
+  }
+  function check(s,clip,now=Date.now()){
+    const t=stage(s);if(s.done||!t?.watched||t.done||t.clipId!==clip.id||t.values.some(x=>x===null))return null;
+    const flags=evaluate(clip,t.values),record={attempt:t.checks.length+1,submittedAt:new Date(now).toISOString(),values:[...t.values],correct:[...flags]};
+    for(let i=0;i<flags.length;i++){
+      if(t.locked[i])continue;if(t.first[i]===null)t.first[i]=flags[i];
+      if(flags[i]){t.locked[i]=true;t.earned[i]=Math.max(2,5-t.wrong[i]);}else t.wrong[i]++;
+    }
+    t.checks.push(record);t.done=t.locked.every(Boolean);
+    if(t.done){pause(s,now);if(s.current===s.stages.length-1){s.done=true;s.completedAt=now;}}
+    return {...record,done:t.done,wrongIndices:flags.flatMap((ok,i)=>ok?[]:[i])};
+  }
+  function next(s){if(s.done||!stage(s)?.done||s.current>=s.stages.length-1)return false;s.current++;return true;}
+  function result(s,song){
+    if(!s.done)return null;const total=s.stages.reduce((n,t)=>n+t.values.length,0),earned=s.stages.reduce((n,t)=>n+t.earned.reduce((a,b)=>a+b,0),0);
+    return {schemaVersion:1,rulesVersion:RULES,sessionId:s.id,gameId:'song-'+s.songId,leaderboardId:'song-'+s.songId,
+      startedAt:new Date(s.startedAt).toISOString(),completedAt:new Date(s.completedAt).toISOString(),questionCount:total,
+      firstAttemptCorrect:s.stages.reduce((n,t)=>n+t.first.filter(Boolean).length,0),firstAttemptAccuracy:s.stages.reduce((n,t)=>n+t.first.filter(Boolean).length,0)/total,
+      score:Math.round(earned/(total*5)*1000)/10,scoreNumerator:earned,scoreDenominator:total*5,
+      attemptCount:s.stages.reduce((n,t)=>n+t.checks.length,0),wrongAttemptCount:s.stages.reduce((n,t)=>n+t.wrong.reduce((a,b)=>a+b,0),0),
+      finalCorrect:total,activeDurationMs:s.activeMs,durationMs:s.activeMs,durationSeconds:Math.round(s.activeMs/1000),
+      videoPlaybackMs:s.videoMs,wallDurationMs:Math.max(0,s.completedAt-s.startedAt),
+      resultDetails:s.stages.map((t,i)=>({clipId:t.clipId,title:song.clips[i].title,questionCount:t.values.length,
+        firstAttemptCorrect:t.first.filter(Boolean).length,attemptCount:t.checks.length,
+        blanks:t.values.map((value,j)=>({index:j,answer:value,firstAttemptCorrect:t.first[j],wrongAttempts:t.wrong[j],earnedUnits:t.earned[j],maxUnits:5})),
+        checks:t.checks.map(c=>({...c,values:[...c.values],correct:[...c.correct]}))}))};
+  }
+  function compare(a,b){return b.scoreNumerator*a.scoreDenominator-a.scoreNumerator*b.scoreDenominator||a.activeDurationMs-b.activeDurationMs||String(a.completedAt).localeCompare(String(b.completedAt));}
+  class WatchGate{
+    constructor(start,end){this.start=start;this.end=end;this.ranges=[];this.previous=null;this.wall=null;}
+    resetSample(){this.previous=null;this.wall=null;}
+    sample(time,wall,playing=true,seeking=false){
+      if(!Number.isFinite(time)||!Number.isFinite(wall)||!playing||seeking){this.resetSample();return;}
+      const t=Math.max(this.start,Math.min(this.end,time));
+      if(this.previous!==null){const delta=t-this.previous,wallDelta=(wall-this.wall)/1000;
+        if(delta>0&&delta<=1.5&&wallDelta>0&&delta<=wallDelta*1.35+.12)this.add(this.previous,t);
+      }
+      this.previous=t;this.wall=wall;
+    }
+    add(start,end){this.ranges.push([start,end]);this.ranges.sort((a,b)=>a[0]-b[0]);const merged=[];for(const r of this.ranges){const last=merged.at(-1);if(last&&r[0]<=last[1]+.08)last[1]=Math.max(last[1],r[1]);else merged.push([...r]);}this.ranges=merged;}
+    covered(){return this.ranges.reduce((sum,r)=>sum+r[1]-r[0],0);}
+    complete(){return this.covered()>=this.end-this.start-.45;}
+  }
+  function completedSongIds(records,songIds){
+    const allowed=new Set(songIds);
+    return [...new Set(records.filter(r=>r&&r.practice===true&&!r.pendingUpload&&typeof r.sessionId==='string'&&r.sessionId.length>0&&typeof r.completedAt==='string'&&Number.isFinite(Date.parse(r.completedAt))&&Number.isInteger(r.questionCount)&&r.questionCount>0&&r.finalCorrect===r.questionCount&&typeof r.gameId==='string'&&r.gameId.startsWith('song-')).map(r=>r.gameId.slice(5)).filter(id=>allowed.has(id)))];
+  }
+  const api={RULES,shuffle,createRound,stage,pause,resume,elapsed,markWatched,allowedWords,place,takeBack,evaluate,check,next,result,compare,WatchGate,completedSongIds};
+  if(typeof module==='object'&&module.exports)module.exports=api;else root.SongTheatreModel=api;
+})(typeof window!=='undefined'?window:globalThis);
+</script><script>window.SongTheatreData = {"schemaVersion":1,"rulesVersion":"song-retry-100-80-60-40-v1","periods":[{"id":"prehistoric","name":"史前時期","image":"01_史前時期_卷軸.webp","songId":"prehistoric"},{"id":"dutch","name":"荷西時期","image":"02_荷西時期_卷軸.webp","songId":"dutch"},{"id":"zheng","name":"明鄭時期","image":"03_明鄭時期_卷軸.webp","songId":"zheng"},{"id":"qing","name":"清帝國時期","image":"04_清帝國時期_卷軸.webp","songId":null},{"id":"japanese","name":"日治時期","image":"05_日治時期_卷軸.webp","songId":null},{"id":"postwar","name":"戰後臺灣","image":"06_戰後臺灣_卷軸.webp","songId":null}],"songs":[{"id":"dutch","period":"荷西時期","title":"荷西之歌","media":"荷西之歌_網頁版.mp4","original":"荷西之歌.mp4","duration":237.7,"clips":[{"id":"H01","start":19,"end":40.3,"title":"來臺的足跡","parts":["荷蘭人來臺灣做","，從臺南的","登陸，並建立","。"],"answers":["貿易","安平","熱蘭遮城"],"extra":["屯田","基隆"],"unordered":[],"explanation":"荷蘭人以貿易為重要目的，從臺南安平一帶登陸，建立熱蘭遮城。","evidenceSeconds":[26,30,38]},{"id":"H02","start":40.3,"end":56.6,"title":"耕作與商品","parts":["荷蘭人招募","、引進","協助耕地，臺灣外銷的重要商品包括","與","。"],"answers":["漢人","黃牛","蔗糖","鹿皮"],"extra":["白銀","瓷器"],"unordered":[[2,3]],"explanation":"漢人與黃牛參與開墾耕作；蔗糖、鹿皮是影片介紹的臺灣重要外銷物產。","evidenceSeconds":[42,46,50,54]},{"id":"H03","start":56.6,"end":68,"title":"傳教與文字","parts":["荷蘭人傳教並設立學校，以","記錄原住民族語，留下","等文獻。"],"answers":["羅馬文拼音","新港文"],"extra":["甲骨文","科舉"],"unordered":[],"explanation":"影片提到教堂、學校、新港文及羅馬文拼音，這些資料也成為認識當時社會的線索。","evidenceSeconds":[58,62,66]},{"id":"H04","start":80,"end":108.8,"title":"北臺灣的據點","parts":["影片介紹西班牙人在北臺灣活動，提到的兩個地點是","與","。"],"answers":["基隆","淡水"],"extra":["臺南","澎湖"],"unordered":[[0,1]],"explanation":"西班牙人曾在基隆、淡水一帶建立據點。這兩個地點並列，順序互換也正確。","evidenceSeconds":[82,86,98]},{"id":"H05","start":108.8,"end":132,"title":"傳教與勢力競爭","parts":["西班牙人傳播","，後來在","年被","驅離北臺灣。"],"answers":["天主教","1642","荷蘭人"],"extra":["儒學","1662"],"unordered":[],"explanation":"影片介紹西班牙人傳播天主教，也呈現荷西勢力因經濟利益衝突而競爭。","evidenceSeconds":[110,122,126]},{"id":"H06","start":159.7,"end":188,"title":"稅金、反抗與城堡","parts":["荷蘭人徵收過重的","，引起不滿並爆發","事件；平定後建立","，也就是今天赤崁樓的前身。"],"answers":["稅金","郭懷一","普羅民遮城"],"extra":["鄭經","熱蘭遮城"],"unordered":[],"explanation":"影片以稅金、郭懷一事件及普羅民遮城，介紹荷蘭統治時的衝突與防禦。","evidenceSeconds":[162,166,170,182,186]}],"bonus":{"goods":["蔗糖","鹿皮","瓷器","絲綢","白銀","槍砲"],"answers":["蔗糖","鹿皮"],"prompt":"選出本首歌介紹、臺灣生產並外銷的兩項重要商品。","explanation":"蔗糖、鹿皮是本題指定的臺灣外銷物產；其他商品也可能出現在貿易網絡中，但不是本題的答案。"}},{"id":"zheng","period":"明鄭時期","title":"鄭氏時期","media":"鄭氏時期_網頁版.mp4","original":"鄭氏時期.mp4","duration":255.26,"clips":[{"id":"Z01","start":11,"end":35.5,"title":"海上的活動","parts":["影片提到的海商是","，他從事海上","活動。"],"answers":["鄭芝龍","貿易"],"extra":["施琅","屯田"],"unordered":[],"explanation":"歌詞以「芝龍海商做生意」介紹鄭芝龍的海上活動；題目把做生意整理為貿易活動。","evidenceSeconds":[18,22,26,30]},{"id":"Z02","start":35.5,"end":57.3,"title":"來臺的目標","parts":["鄭成功以","為目標，在","擊退","。"],"answers":["反清復明","安平","荷蘭人"],"extra":["開港通商","西班牙人"],"unordered":[],"explanation":"影片提到鄭成功在安平擊退荷蘭人，希望以臺灣繼續反清復明。","evidenceSeconds":[46,50,54]},{"id":"Z03","start":57.3,"end":84,"title":"政權的接續","parts":["鄭成功之後由","繼位；後來","統治時，鄭軍在","戰敗，鄭氏政權隨後向清朝投降。"],"answers":["鄭經","鄭克塽","澎湖"],"extra":["施琅","淡水"],"unordered":[],"explanation":"鄭氏政權先後由鄭成功、鄭經、鄭克塽掌握。鄭氏政權在 1683 年結束；1684 年清廷設臺灣府，兩個年份代表不同事件。","evidenceSeconds":[62,70,74,78],"teacherNote":"原影片此段出現1684年字卡；本題不考年份，過關後補充1683政權結束與1684設府的差別。"},{"id":"Z06","start":92,"end":116.7,"title":"行政與文教","parts":["影片以赤崁樓介紹行政中心","；也提到興建","與設立","，推動文教。"],"answers":["承天府","孔廟","學校"],"extra":["熱蘭遮城","鐵路"],"unordered":[],"explanation":"影片提到承天府、陳永華建孔廟及設學校，呈現鄭氏政權推動行政與文教的面向。","evidenceSeconds":[94,98,106,110,114]},{"id":"Z04","start":116.7,"end":141.1,"title":"土地與耕作","parts":["鄭氏政權推行","政策，安排","耕田，留下若干地名與開墾痕跡。"],"answers":["屯田","軍隊"],"extra":["科舉","傳教士"],"unordered":[],"explanation":"影片介紹軍隊屯田，並舉左鎮、新營、林鳳營、柳營等地名作為線索。","evidenceSeconds":[118,122,126,130,138]},{"id":"Z05","start":141.1,"end":164.8,"title":"海外交流","parts":["鄭氏政權進行","，外銷","與","，也購買","作為武器。"],"answers":["國際貿易","蔗糖","鹿皮","槍砲"],"extra":["鐵路","茶葉"],"unordered":[[1,2]],"explanation":"影片介紹與中國、日本、東南亞的貿易，外銷蔗糖與鹿皮，也透過與英國通商購買槍砲。","evidenceSeconds":[142,146,150,154,158,162]}],"bonus":{"goods":["蔗糖","鹿皮","瓷器","絲綢","白銀","槍砲"],"answers":["蔗糖","鹿皮"],"prompt":"選出本首歌中，臺灣生產並向海外販售的兩項商品。","explanation":"蔗糖、鹿皮是臺灣外銷物產；槍砲是影片介紹向海外購買的武器，分類方向不同。"}},{"id":"prehistoric","period":"史前時期","title":"臺灣歷史的起點","media":"臺灣歷史的起點_網頁版.mp4","original":"臺灣歷史的起點.mp4","duration":304.18,"clips":[{"id":"P01","start":60,"end":73,"title":"舊石器時代","parts":["舊石器時期，人們以","製作工具，透過","和","等方式取得食物。"],"answers":["敲打","漁獵","採集"],"extra":["煉鐵","農耕"],"unordered":[[1,2]],"explanation":"敲打製成的石器，以及漁獵、採集，是影片介紹的舊石器時期特色。這是比較主要特色，並不是說後來的人完全不用敲打石器。","evidenceSeconds":[66,70]},{"id":"P02","start":73,"end":85.5,"title":"新石器時代","parts":["影片介紹的","屬於新石器時期。當時人們會製作精細的","，和舊石器時期常見的","石器有所不同。"],"answers":["大坌坑文化","打磨石器","敲打"],"extra":["十三行文化","鐵器"],"unordered":[],"explanation":"大坌坑文化屬於新石器時期；打磨技術能製成更精細的石器。三個時期的差異包含技術與生活方式，不只是一條先後的時間線。","evidenceSeconds":[78,82]},{"id":"P03","start":85.5,"end":105,"title":"新石器時代","parts":["卑南文化的人們將玉器等放入墓中，作為","；影片也提到人們紡織、飼養","。依補充線索，玉器在臺灣不同地區間流通，反映","交流。"],"answers":["陪葬品","家畜","島內"],"extra":["島外","錢幣"],"unordered":[],"explanation":"埋葬與陪葬遺留，是認識史前生命禮俗的線索。玉器的分布也能幫助我們理解島內交流；史前的卑南文化不直接等同今日卑南族，各族生命禮俗也不相同。","evidenceSeconds":[94,98,102],"supplement":"影片外補充線索｜臺灣史前玉器與製玉技術曾從東部、北部傳到中部及西部地區。請結合這則線索，判斷交流發生在島內或島外。","supplementSource":"https://acq.th.gov.tw/austronesian/b.html","teacherNote":"影片可見卑南文化玉器陪葬及飼養家畜；島內玉器流通為官方資料補充，僅在填空開啟後顯示，不假稱歌詞已提及。生命禮俗以埋葬為例，不延伸未出現的出生、婚姻或成年儀式。"},{"id":"P04","start":124,"end":148,"title":"金屬器時代","parts":["十三行文化屬於","，人們已懂得","。影片提到來自","的錢幣，是臺灣與","交流的線索。"],"answers":["金屬器時期","煉鐵","中國大陸","島外"],"extra":["舊石器時期","島內"],"unordered":[],"explanation":"十三行文化的煉鐵技術與外來錢幣，呈現金屬器時期的生活及島外交流；和前段臺灣各地之間的島內交流相比，交流範圍不同。","evidenceSeconds":[126,134,138,146]},{"id":"P05","start":148,"end":157,"title":"原住民族文化","parts":["南島語系是依","的親緣關係所作的分類。使用這些語言的族群，合稱","；臺灣原住民族也是其中的一員。"],"answers":["語言","南島語族"],"extra":["工具","金屬器時期"],"unordered":[],"explanation":"「南島語族」指使用南島語言的族群，並非單指一個民族；不同族群仍有各自的語言和文化。影片使用「南島語系」一詞，這裡補充它與「南島語族」的關係。","evidenceSeconds":[154],"supplement":"語詞小提醒｜「語系」用來說明語言之間的親緣關係；「語族」在這裡指使用南島語言的族群。","supplementSource":"https://www.cip.gov.tw/zh-tw/news/data-list/49744114ECE41D1F/index.html?cumid=49744114ECE41D1F","teacherNote":"影片將「約一萬五千年」與南島語系相鄰呈現，本題不以此作南島語族定居年代的考題，也不考影片後續舊式平埔／高山二分法。"},{"id":"P06","start":172,"end":200,"title":"原住民族文化","parts":["影片介紹的","以","慶祝收穫；各族有不同的","，展現各自的文化特色。"],"answers":["阿美族","豐年祭","祭儀"],"extra":["賽夏族","矮靈祭","達悟族","下水祭"],"unordered":[],"explanation":"影片介紹達悟族下水祭、阿美族豐年祭、賽夏族矮靈祭及布農族合唱；不同族群的祭儀與文化各有特色。","evidenceSeconds":[174,182,186,194],"teacherNote":"依使用者確認，新增「祭儀」填空，不以「生命禮俗」作本段答案。三種考古時代標題可與答案重複。"}],"bonus":{"title":"史前生活小偵探","prompt":"選出兩項屬於新石器時期的生活或技術特色。","goods":["打磨石器","飼養家畜","以煉鐵為代表","熱蘭遮城","荷蘭人徵稅","新港文"],"answers":["打磨石器","飼養家畜"],"instruction":"選出兩項特色，再按確認分類。","retryHint":"想想新石器時期的工具與生活。可重聽完整影片，再調整選擇。","explanation":"打磨石器與飼養家畜是本次影片介紹的新石器生活特色。這個額外練習不改變歌曲主關成績。"}}]};</script><script>(function(){
+  'use strict';
+  const M=window.SongTheatreModel,D=window.SongTheatreData,host=window.SocialGameHost||null;
+  const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const songs=Object.fromEntries(D.songs.map(s=>[s.id,s])),STORE='social-time-explorer:songs:retry-v1';
+  let round=null,song=null,phase='picker',pendingId=null,selected=null,marks=new Set(),gate=null;
+  let identityReady=!host,mediaSerial=0,confirmAction=null,videoWallStart=null;
+  let lastResult=null,saving=false,savedId=null,memory=[],gesture=null,suppressClickUntil=0;
+  let bonusSelected=[],bonusAttempts=0,bonusDone=false;
+  let lastCheckAt=0;
+  const unlockedSongs=new Set(host?[]:M.completedSongIds(records(),Object.keys(songs)));
+  let mvResume=null,settingsReady=!host,starting=false,startSerial=0;
+  let songSettings={revision:'standalone-default-v1',enabledPeriods:D.periods.filter(p=>p.songId).map(p=>p.id)};
+  const media=$('video'),full=$('full-video');
+  const uid=()=>window.crypto?.randomUUID?.()||'song-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+  const currentClip=()=>song?.clips[round?.current];
+  const format=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');};
+  function open(id){if(!$(id).open)$(id).showModal();}
+  function close(id){if($(id).open)$(id).close();}
+  function say(text,tone=''){$('feedback').textContent=text;$('feedback').dataset.tone=tone;}
+  function updateStats(){if(!round)return;$('timer').textContent=format(M.elapsed(round));$('attempts').textContent=round.stages.reduce((n,t)=>n+t.checks.length,0)+' 次';$('stage-count').textContent=(round.current+1)+'／6 段';}
+  function stopVideoClock(){if(videoWallStart!==null&&round&&!round.done)round.videoMs+=Math.max(0,Date.now()-videoWallStart);videoWallStart=null;}
+  function stopMedia(){stopVideoClock();media.pause();full.pause();gate?.resetSample();}
+  function pendingSave(){return !!round?.done&&savedId!==round.id;}
+  function drawPicker(){
+    $('periods').innerHTML=D.periods.map(p=>{const ready=p.songId&&songs[p.songId],enabled=ready&&settingsReady&&songSettings.enabledPeriods.includes(p.id);return `<button class="period-card" type="button" ${enabled?`data-song="${p.songId}" aria-label="進入${p.name}歌曲關卡"`:'disabled aria-label="'+esc(p.name)+'，'+(ready?'老師暫未開放':'素材準備中')+'"'}><img src="../00共用六大時期卷軸/網頁用圖/${esc(p.image)}" alt="${esc(p.name)}" width="1090" height="390"><small>${enabled?'可探索・6 段歌曲':ready?'暫未開放':'素材準備中'}</small></button>`;}).join('');
+    $('periods').querySelectorAll('[data-song]').forEach(b=>b.onclick=()=>showIntro(b.dataset.song));
+  }
+  async function readSongSettings(){
+    settingsReady=false;$('song-settings-status').textContent=host?'正在讀取開放範圍…':'';$('retry-song-settings').hidden=true;drawPicker();
+    try{
+      const raw=host?await host.getGameSettings('songs'):songSettings;
+      if(!raw||!Array.isArray(raw.enabledPeriods)||!raw.enabledPeriods.length||raw.enabledPeriods.some(id=>!D.periods.some(p=>p.id===id&&p.songId&&songs[p.songId])))throw Error('INVALID_SETTINGS');
+      songSettings={revision:typeof raw.revision==='string'?raw.revision:'default-v1',enabledPeriods:[...raw.enabledPeriods]};settingsReady=true;$('song-settings-status').textContent='';drawPicker();return songSettings;
+    }catch{$('song-settings-status').textContent='開放範圍尚未讀取成功，請重試。';$('retry-song-settings').hidden=false;drawPicker();return null;}
+  }
+  function showIntro(id){if(!songs[id]||!settingsReady||!songSettings.enabledPeriods.includes(id))return;pendingId=id;$('intro-title').textContent=songs[id].title+'，一起聽故事！';$('start-song').disabled=!identityReady;$('start-song').textContent=identityReady?'進入這首歌':'請先回大地圖登入';open('intro');}
+  async function startSong(){
+    if(!identityReady||!pendingId||saving||starting)return;
+    const requestedId=pendingId,ticket=++startSerial;starting=true;$('start-song').disabled=true;$('start-song').textContent='正在確認開放範圍…';
+    const scope=await readSongSettings();starting=false;if(ticket!==startSerial||requestedId!==pendingId)return;
+    if(!scope||!scope.enabledPeriods.includes(requestedId)){close('intro');if(scope)$('song-settings-status').textContent='老師已更新開放範圍，請重新選擇歌曲。';if(round)say(scope?'老師已更新開放範圍，這首歌暫未開放。原回合保留。':'無法讀取新回合的開放範圍，原回合保留。');return;}
+    stopMedia();++mediaSerial;song=songs[pendingId];round=M.createRound(song,Date.now(),uid());round.settingsRevision=scope.revision;round.enabledPeriods=[...scope.enabledPeriods];
+    round.stages.forEach((t,i)=>t.wordOrder=M.shuffle(M.allowedWords(song.clips[i])));
+    savedId=null;lastResult=null;bonusSelected=[];bonusAttempts=0;bonusDone=false;
+    close('intro');close('result');close('confirm');$('picker').hidden=true;$('finished').hidden=true;$('game').hidden=false;
+    $('song-title').textContent=song.title;$('period-label').textContent=song.period;
+    refreshMvButton();prepareClip();$('song-title').setAttribute('tabindex','-1');$('song-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});
+  }
+  function refreshMvButton(){$('watch-full').hidden=!song||!unlockedSongs.has(song.id);}
+  function showUnlockedMv(){
+    if(!song||!round||!unlockedSongs.has(song.id)||$('mv-dialog').open)return;
+    mvResume={id:round.id,phase};++mediaSerial;stopMedia();M.pause(round,Date.now());phase='mv';
+    $('mv-title').textContent=song.title+'｜完整 MV';
+    $('unlocked-video').src='網頁影音/'+song.media;$('unlocked-video').load();open('mv-dialog');
+  }
+  function leaveUnlockedMv(){
+    $('unlocked-video').pause();$('unlocked-video').removeAttribute('src');$('unlocked-video').load();
+    const resume=mvResume;mvResume=null;
+    if(!resume||!round||round.id!==resume.id)return;
+    phase=resume.phase;gate?.resetSample();$('play-clip').disabled=false;$('play-clip').hidden=false;if(phase==='answer')M.resume(round,Date.now());
+    renderAnswer();
+  }
+  function prepareClip(){
+    stopMedia();M.pause(round,Date.now());phase='watch';selected=null;marks.clear();
+    const clip=currentClip();gate=new M.WatchGate(clip.start,clip.end);++mediaSerial;media.controls=false;
+    $('play-clip').hidden=false;$('play-clip').disabled=false;
+    $('clip-title').textContent=clip.title;$('knowledge').hidden=true;$('next').hidden=true;
+    $('listen-status').textContent='按下播放，先聽完這段歌曲。';$('play-clip').textContent='播放本段';$('start-answer').disabled=true;$('start-answer').textContent='聽完後開始填空';
+    $('watch-progress').textContent='聆聽進度 0／'+Math.ceil(clip.end-clip.start)+' 秒';
+    const source='網頁影音/'+song.media;
+    if(media.getAttribute('src')!==source){media.setAttribute('src',source);media.load();}
+    $('steps').innerHTML=song.clips.map((c,i)=>`<li class="${round.stages[i].done?'done':i===round.current?'current':''}" aria-label="第 ${i+1} 段${round.stages[i].done?'已完成':i===round.current?'，目前進度':''}"></li>`).join('');
+    say('準備好後，播放這一段歌曲。');renderAnswer();updateStats();
+  }
+  async function waitFor(event,predicate,timeout=10000){
+    if(predicate())return;
+    return await new Promise((resolve,reject)=>{let timer;const done=()=>{clearTimeout(timer);media.removeEventListener(event,done);media.removeEventListener('error',error);resolve();};const error=()=>{clearTimeout(timer);media.removeEventListener(event,done);media.removeEventListener('error',error);reject(new Error('Media unavailable'));};media.addEventListener(event,done);media.addEventListener('error',error);timer=setTimeout(error,timeout);});
+  }
+  async function playClip(){
+    if(!round||round.done)return;media.controls=true;const serial=mediaSerial,clip=currentClip();M.pause(round,Date.now());phase='watch';selected=null;renderAnswer();
+    $('listen-status').textContent='正在準備這段影片…';$('play-clip').disabled=true;
+    try{
+      await waitFor('loadedmetadata',()=>media.readyState>=1);if(serial!==mediaSerial)return;
+      media.pause();gate.resetSample();
+      if(Math.abs(media.currentTime-clip.start)>.04){media.currentTime=clip.start;await waitFor('seeked',()=>!media.seeking&&Math.abs(media.currentTime-clip.start)<.15);}
+      if(serial!==mediaSerial)return;
+      await media.play();if(serial!==mediaSerial){media.pause();return;}$('play-clip').textContent='重播本段';$('play-clip').disabled=false;$('play-clip').hidden=true;$('listen-status').textContent='正在聆聽，播放與重播不計入作答時間。';
+    }catch{if(serial===mediaSerial){$('play-clip').disabled=false;$('play-clip').hidden=false;$('listen-status').textContent='影片尚未開始。請再按播放；若持續失敗，請確認影音資料夾與網頁保持在一起。';}}
+  }
+  function endClip(){
+    stopVideoClock();media.pause();media.controls=false;$('play-clip').hidden=false;const t=M.stage(round);
+    if(gate.complete()||t.watched){M.markWatched(round);phase=t.done?'feedback':'ready';$('listen-status').textContent='這一段聽完了！可以開始填空，也能再聽一次。';$('watch-progress').textContent='本段聆聽完成';$('start-answer').disabled=false;$('start-answer').textContent=t.done?'查看已完成填空':'開始填空';renderAnswer();}
+    else{$('listen-status').textContent='這段還有未聽完的部分，請按播放，從本段開頭再聽一次。';phase='watch';renderAnswer();}
+  }
+  function tickVideo(){
+    if(!round||round.done||!gate||phase!=='watch')return;
+    const clip=currentClip();gate.sample(media.currentTime,Date.now(),!media.paused&&media.readyState>=3,media.seeking);
+    $('watch-progress').textContent='聆聽進度 '+Math.min(Math.ceil(clip.end-clip.start),Math.floor(gate.covered()))+'／'+Math.ceil(clip.end-clip.start)+' 秒';
+    if(!media.paused&&media.currentTime>=clip.end-.035)endClip();
+  }
+  media.addEventListener('playing',()=>{if(!round||round.done)return;videoWallStart=Date.now();$('play-clip').hidden=true;});
+  media.addEventListener('play',()=>{if(!round||round.done)return;const c=currentClip();if(media.currentTime<c.start-.15||media.currentTime>=c.end){media.pause();playClip();return;}M.pause(round,Date.now());phase='watch';renderAnswer();});
+  media.addEventListener('pause',()=>{stopVideoClock();gate?.resetSample();$('play-clip').hidden=false;});
+  media.addEventListener('waiting',()=>{stopVideoClock();gate?.resetSample();});
+  media.addEventListener('seeking',()=>{stopVideoClock();gate?.resetSample();});
+  media.addEventListener('seeked',()=>gate?.resetSample());
+  media.addEventListener('timeupdate',tickVideo);
+  media.addEventListener('ended',()=>{if(round&&!round.done)endClip();});
+  media.addEventListener('ratechange',()=>{if(media.playbackRate!==1)media.playbackRate=1;});
+  media.addEventListener('error',()=>{if(round&&!round.done)$('listen-status').textContent='影片載入失敗，請確認網頁影音資料夾存在，再按播放重試。';});
+  function startAnswer(){
+    if(!round||!M.stage(round).watched||round.done)return;
+    stopVideoClock();media.pause();phase=M.stage(round).done?'feedback':'answer';
+    if(phase==='answer')M.resume(round,Date.now());
+    $('listen-status').textContent='可以填空了。想再聽一次時，按下重播即可。';renderAnswer();
+  }
+  function renderAnswer(focusId){
+    if(!round)return;const t=M.stage(round),clip=currentClip(),show=phase==='answer'||phase==='feedback';
+    $('answer-placeholder').hidden=show;$('answer-content').hidden=!show;
+    $('start-answer').disabled=!t.watched;
+    if(show){
+      $('supplement').hidden=!clip.supplement;$('supplement').textContent=clip.supplement||'';
+      let sentence='';for(let i=0;i<clip.answers.length;i++){
+        const value=t.values[i],locked=t.locked[i];sentence+=esc(clip.parts[i])+`<span class="blank-wrap"><button type="button" id="blank-${i}" class="blank ${value?'filled':''} ${locked?'correct':marks.has(i)?'wrong':''} ${selected&&selected===value?'selected':''}" data-blank="${i}" aria-label="空格 ${i+1}，${value?esc(value):'尚未填入'}${locked?'，已答對，取得'+(t.earned[i]*20)+'%分數':''}" ${locked?'disabled':''}>${locked?'✓ ':''}${value?esc(value):'空格 '+(i+1)}</button>${value&&!locked?`<button class="return-word" type="button" data-return="${i}" aria-label="取回空格 ${i+1} 的詞卡">↶</button>`:locked?`<small class="earned">${t.earned[i]*20}%</small>`:''}</span>`;
+      }
+      sentence+=esc(clip.parts.at(-1));$('sentence').innerHTML=sentence;
+      const used=new Set(t.values.filter(Boolean));$('word-bank').hidden=t.done;
+      $('word-bank').innerHTML=t.wordOrder.filter(w=>!used.has(w)).map((w,i)=>`<button type="button" class="word ${selected===w?'selected':''}" data-word="${esc(w)}" id="word-${i}" aria-label="選取${esc(w)}" aria-pressed="${selected===w}">${esc(w)}</button>`).join('');
+      $('selection').textContent=t.done?'這一段的歷史重點，全部找到了！':selected?'已選取「'+selected+'」，請點空格。':clip.unordered.length?'並列的答案，選對後可互換順序。':'選一張詞卡，找回這段歷史的重點。';
+      $('check').disabled=t.done||t.values.some(x=>x===null);$('check').textContent=t.done?'本段完成':t.values.some(x=>x===null)?'先填滿空格':'檢查答案';
+      $('clear-unlocked').disabled=t.done||!t.values.some((x,i)=>x&&!t.locked[i]);
+    }
+    $('next').hidden=false;$('next').disabled=!t.done;$('next').textContent=round.current===5?'完成這首歌':'前往下一段';
+    $('knowledge').hidden=!t.done;if(t.done)$('knowledge').textContent='這段歷史的小知識：'+clip.explanation;
+    $('steps').querySelectorAll('li').forEach((node,i)=>{const done=round.stages[i].done;node.classList.toggle('done',done);node.classList.toggle('current',i===round.current&&!done);node.setAttribute('aria-label','第 '+(i+1)+' 段'+(done?'已完成':i===round.current?'，目前進度':''));});
+    updateStats();if(focusId)$(focusId)?.focus({preventScroll:true});
+  }
+  function place(word,index){if(phase!=='answer')return;const old=M.stage(round).values.indexOf(word);if(M.place(round,currentClip(),word,index)){selected=null;marks.delete(index);marks.delete(old);say('可以繼續調整；填滿空格後，再按檢查答案。');renderAnswer('blank-'+index);}}
+  function check(){
+    if(!round||phase!=='answer'||Date.now()-lastCheckAt<500)return;const result=M.check(round,currentClip(),Date.now());if(!result)return;lastCheckAt=Date.now();selected=null;marks=new Set(result.wrongIndices);
+    if(result.done){phase='feedback';say('全部答對！這段歷史的重點都找到了。','good');renderAnswer();if(round.done)finishSong();}
+    else{say('還有 '+result.wrongIndices.length+' 格需要調整。已答對的格子保留，你可以重聽再試一次。','wrong');renderAnswer('blank-'+result.wrongIndices[0]);}
+  }
+  function finishSong(){
+    stopMedia();phase='finished';$('game').hidden=true;$('finished').hidden=false;
+    $('finished-title').textContent=song.title+'｜探索完成';full.setAttribute('src','網頁影音/'+song.media);full.load();
+    drawBonus();showResult();window.scrollTo({top:0,behavior:'instant'});
+  }
+  function records(){try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a.filter(r=>r&&typeof r.sessionId==='string'):[];}catch{return [...memory];}}
+  function saveLocal(record){memory=[...records().filter(r=>r.sessionId!==record.sessionId),record].slice(-200);try{localStorage.setItem(STORE,JSON.stringify(memory));return true;}catch{return false;}}
+  async function saveResult(){
+    if(!lastResult||saving||savedId===lastResult.sessionId)return;const result=lastResult;saving=true;
+    $('retry-save').hidden=true;$('result-back').disabled=true;$('again').disabled=true;$('finish-back').disabled=true;
+    $('save-status').textContent=host?'正在儲存這首歌的探索成果…':'';let message='',failed=false;
+    try{
+      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(result);if(response?.saved!==true||response.sessionId!==result.sessionId)throw new Error('Unconfirmed save');savedId=result.sessionId;unlockedSongs.add(result.gameId.slice(5));message='這首歌的探索成果已儲存。';}
+      else{const durable=saveLocal({...result,practice:true,identityVerified:false});savedId=result.sessionId;unlockedSongs.add(result.gameId.slice(5));message=durable?'試玩成績已保存在這個瀏覽器；未列入學校排行榜。':'目前只能暫存本次成績，關閉網頁後可能不保留。';}
+    }catch{if(host)saveLocal({...result,practice:false,pendingUpload:true});message='成績尚未傳送成功，請保留此頁並重試儲存。';failed=true;}
+    finally{saving=false;if(lastResult?.sessionId===result.sessionId){$('save-status').textContent=message;$('retry-save').hidden=!failed;$('result-back').disabled=failed;$('again').disabled=failed;$('finish-back').disabled=failed;}}
+  }
+  function showResult(){
+    if(!round?.done)return;lastResult={...M.result(round,song),settingsRevision:round.settingsRevision,enabledPeriods:[...round.enabledPeriods]};$('result-song').textContent=song.period+'｜'+song.title;
+    $('result-score').textContent=Number(lastResult.score.toFixed(1))+' 分';$('result-time').textContent=format(lastResult.activeDurationMs);
+    $('result-first').textContent=lastResult.firstAttemptCorrect+'／'+lastResult.questionCount+' 格';$('result-checks').textContent=lastResult.attemptCount+' 次';open('result');saveResult();
+  }
+  function drawBonus(){
+    $('bonus-title').textContent=song.bonus.title||'貿易商品分類';
+    $('bonus-prompt').textContent=song.bonus.prompt;
+    $('bonus-bank').innerHTML=song.bonus.goods.map(g=>`<button type="button" class="bonus-word" data-good="${esc(g)}" aria-pressed="${bonusSelected.includes(g)}" ${bonusDone?'disabled':''}>${esc(g)}</button>`).join('');
+    $('bonus-check').disabled=bonusDone;$('bonus-clear').disabled=bonusDone;
+    if(!bonusAttempts)$('bonus-feedback').textContent=song.bonus.instruction||'選出兩項商品，再按確認分類。';
+  }
+  function checkBonus(){
+    if(bonusDone)return;if(bonusSelected.length!==2){$('bonus-feedback').textContent=song.bonus.instruction||'請選出兩項商品，再確認分類。';return;}
+    bonusAttempts++;const correct=song.bonus.answers.every(w=>bonusSelected.includes(w));
+    if(correct){bonusDone=true;const record={schemaVersion:1,rulesVersion:M.RULES,sessionId:round.id+'-bonus',parentSessionId:round.id,gameId:'practice-song-'+song.id,leaderboardEligible:false,completedAt:new Date().toISOString(),attemptCount:bonusAttempts,firstAttemptCorrect:bonusAttempts===1,selected:[...bonusSelected],finalCorrect:true};
+      const stored=saveLocal({...record,practice:!host,identityVerified:false});$('bonus-feedback').textContent='分類完成！'+song.bonus.explanation+(stored?' 額外練習成果已保存在本機。':' 額外練習成果已暫存。');
+      if(host?.savePractice)host.savePractice(record).then(r=>{if(r?.saved)$('bonus-feedback').textContent='分類完成！'+song.bonus.explanation+' 額外練習成果已儲存。';}).catch(()=>{});
+    }else{$('bonus-feedback').textContent=song.bonus.retryHint||'再想想哪些是臺灣生產並往海外販售的商品。你可以調整後再試一次。';}
+    drawBonus();
+  }
+  function confirmActionDialog(title,text,label,action){confirmAction=action;$('confirm-title').textContent=title;$('confirm-text').textContent=text;$('confirm-ok').textContent=label;open('confirm');}
+  function picker(){stopMedia();if(round)M.pause(round,Date.now());++mediaSerial;round=null;song=null;pendingId=null;phase='picker';gate=null;close('result');close('intro');$('game').hidden=true;$('finished').hidden=true;$('picker').hidden=false;readSongSettings();window.scrollTo({top:0,behavior:'instant'});}
+  function back(){if(saving||pendingSave()){showResult();return;}if(round&&!round.done)confirmActionDialog('要先返回掛軸嗎？','這首歌尚未完成；返回後會結束本回合，未完成的回合不列入成績。','返回掛軸',picker);else picker();}
+  function restart(){if(!round||saving||pendingSave()){if(round?.done)showResult();return;}pendingId=song.id;confirmActionDialog('要重新挑戰這首歌嗎？','這會從第一段重新開始，重新計分及計時；已完成的舊紀錄會保留。','重新挑戰',startSong);}
+  function home(){if(!host?.goHome){open('home-info');return;}if(saving||pendingSave()){showResult();return;}if(round&&!round.done)confirmActionDialog('要返回冒險大地圖嗎？','這一回合尚未完成的歌曲不列入成績。','返回大地圖',()=>{stopMedia();host.goHome();});else{stopMedia();host.goHome();}}
+  $('start-song').onclick=startSong;$('intro-close').onclick=()=>{startSerial++;close('intro');};$('play-clip').onclick=playClip;$('start-answer').onclick=startAnswer;$('check').onclick=check;
+  $('next').onclick=()=>{if(!round)return;if(round.done){finishSong();return;}if(M.next(round))prepareClip();};
+  $('clear-unlocked').onclick=()=>{if(!round||phase!=='answer')return;M.stage(round).values.forEach((_,i)=>M.takeBack(round,i));selected=null;marks.clear();renderAnswer();};
+  $('help').onclick=()=>open('help-dialog');$('back-picker').onclick=back;$('finish-back').onclick=back;$('result-back').onclick=back;$('home').onclick=home;$('restart').onclick=restart;$('again').onclick=restart;
+  $('watch-full').onclick=showUnlockedMv;$('mv-dialog').addEventListener('close',leaveUnlockedMv);
+  $('result-open').onclick=showResult;$('retry-save').onclick=saveResult;$('bonus-check').onclick=checkBonus;$('bonus-clear').onclick=()=>{bonusSelected=[];drawBonus();};
+  $('confirm-cancel').onclick=()=>{close('confirm');confirmAction=null;};$('confirm-ok').onclick=()=>{const action=confirmAction;confirmAction=null;close('confirm');action?.();};
+  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>close(b.dataset.close));
+  $('bonus-bank').addEventListener('click',e=>{const b=e.target.closest('[data-good]');if(!b||bonusDone)return;const w=b.dataset.good;bonusSelected=bonusSelected.includes(w)?bonusSelected.filter(x=>x!==w):[...bonusSelected,w];drawBonus();});
+  $('answer-content').addEventListener('click',e=>{
+    if(Date.now()<suppressClickUntil||!round||phase!=='answer')return;
+    const take=e.target.closest('[data-return]');if(take){const i=Number(take.dataset.return);if(M.takeBack(round,i)){selected=null;marks.delete(i);renderAnswer('blank-'+i);}return;}
+    const word=e.target.closest('[data-word]');if(word){selected=selected===word.dataset.word?null:word.dataset.word;renderAnswer(word.id);return;}
+    const blank=e.target.closest('[data-blank]');if(blank){const i=Number(blank.dataset.blank),value=M.stage(round).values[i];if(selected)place(selected,i);else if(value){selected=value;renderAnswer(blank.id);}else say('先選一張詞卡，再點這個空格。');}
+  });
+  $('answer-content').addEventListener('dragstart',e=>e.preventDefault());
+  $('answer-content').addEventListener('pointerdown',e=>{const el=e.target.closest('[data-word],.blank.filled:not(.correct)');if(!el||!round||phase!=='answer'||e.pointerType==='touch'||e.button!==0||e.isPrimary===false)return;const word=el.dataset.word||M.stage(round).values[Number(el.dataset.blank)];gesture={word,el,pointerId:e.pointerId,x:e.clientX,y:e.clientY,dragging:false,ghost:null};});
+  $('answer-content').addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;if(!gesture.dragging&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>10){gesture.dragging=true;$('answer-content').setPointerCapture(e.pointerId);gesture.ghost=document.createElement('div');gesture.ghost.className='drag-ghost';gesture.ghost.innerHTML='<span class="word">'+esc(gesture.word)+'</span>';document.body.appendChild(gesture.ghost);gesture.el.classList.add('drag-source');}if(!gesture.dragging)return;e.preventDefault();gesture.ghost.style.left=e.clientX+'px';gesture.ghost.style.top=e.clientY+'px';document.querySelectorAll('.drop-hover').forEach(n=>n.classList.remove('drop-hover'));document.elementFromPoint(e.clientX,e.clientY)?.closest('.blank:not(.correct)')?.classList.add('drop-hover');});
+  function clearGesture(){if(gesture){if($('answer-content').hasPointerCapture(gesture.pointerId))$('answer-content').releasePointerCapture(gesture.pointerId);gesture.ghost?.remove();gesture=null;}document.querySelectorAll('.drop-hover,.drag-source').forEach(n=>n.classList.remove('drop-hover','drag-source'));}
+  $('answer-content').addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;const g=gesture,target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.blank:not(.correct)');clearGesture();if(!g.dragging)return;e.preventDefault();suppressClickUntil=Date.now()+400;if(target)place(g.word,Number(target.dataset.blank));});
+  $('answer-content').addEventListener('pointercancel',clearGesture);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selected){selected=null;renderAnswer();}});
+  $('retry-song-settings').onclick=readSongSettings;readSongSettings();setInterval(updateStats,500);setInterval(tickVideo,100);
+  if(host){(async()=>{try{const p=await host.getProfile();if(p?.verified!==true||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;$('start-song').disabled=false;$('start-song').textContent='進入這首歌';
+      if(typeof host.getSongUnlocks==='function'){try{const u=await host.getSongUnlocks();if(u?.verified===true&&Array.isArray(u.songIds)){u.songIds.filter(id=>Object.hasOwn(songs,id)).forEach(id=>unlockedSongs.add(id));refreshMvButton();}}catch{/* A failed unlock lookup does not grant access or block playing. */}}
+    }catch{identityReady=false;$('mode').textContent='請先登入';$('start-song').disabled=true;$('start-song').textContent='請先回大地圖登入';}})();}
+})();
+
+</script></body></html>

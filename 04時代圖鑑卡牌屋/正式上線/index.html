@@ -1,0 +1,207 @@
+<!doctype html><html lang="zh-Hant"><head><base href="../"><meta name="integration-source" content="時代圖鑑卡牌屋_事件分類_v1.1.html"><script>(function(){
+ 'use strict';
+ const params=new URLSearchParams(location.hash.slice(1)),channel=params.get('channel'),parentOrigin=params.get('parentOrigin');
+ const valid=parent!==window&&/^[a-f0-9]{32}$/.test(channel||'')&&/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(parentOrigin||'');
+ const protocol='social-explorer-v1',pending=new Map();let serial=0;
+ function request(method,payload){return new Promise((resolve,reject)=>{if(!valid){reject(Error('LOGIN_REQUIRED'));return;}const id=String(++serial),timer=setTimeout(()=>{pending.delete(id);reject(Error('PARENT_UNAVAILABLE'));},45000);pending.set(id,{resolve,reject,timer});parent.postMessage({protocol,channel,id,method,payload},parentOrigin);});}
+ window.addEventListener('message',e=>{const m=e.data;if(!valid||e.source!==parent||e.origin!==parentOrigin||m?.protocol!==protocol||m.channel!==channel||m.type!=='response'||!pending.has(m.id))return;const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);if(m.ok)p.resolve(m.value);else p.reject(Error(m.error||'PARENT_UNAVAILABLE'));});
+ // 正式入口即使被單獨開啟，也必須經過首頁的 Google 驗證。
+ window.SocialGameHost=Object.freeze({preview:false,getProfile:()=>request('getProfile'),getGameSettings:id=>request('getGameSettings',id),getSongUnlocks:()=>request('getSongUnlocks'),saveResult:r=>request('saveResult',r),savePractice:r=>request('savePractice',r),goHome:()=>{request('goHome').catch(()=>{});}});
+})();
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#786649"><title>時代圖鑑卡牌屋｜歷史事件分類</title><style>*{box-sizing:border-box}html{color-scheme:light}body{margin:0;font-family:"Microsoft JhengHei","PingFang TC",sans-serif;color:#584632;background:#b59a6c}button{font:inherit;cursor:pointer;color:inherit}button:disabled{cursor:default}button:focus-visible{outline:3px solid #327186;outline-offset:4px}[hidden]{display:none!important}.scene{position:fixed;inset:0;z-index:-1;background:linear-gradient(#47372520,#47372525),url("網頁用圖/background.webp") center/cover no-repeat}.shell{max-width:1460px;margin:auto;padding:17px 4% 10px}.topbar{display:flex;align-items:center;gap:10px}.brand{font-family:"DFKai-SB","BiauKai",serif;font-size:15px;letter-spacing:.12em;background:#fff7e6ef;border:1px solid #bca778;border-radius:7px;padding:10px 14px}.mode{margin-left:auto;background:#f7efddec;border-radius:18px;border:1px solid #c1ae87;padding:7px 13px;font-size:12px}.primary,.secondary{border-radius:8px;border:1px solid #ac8c60;min-height:43px;padding:10px 20px;font-size:15px;transition:background .15s,transform .15s}.primary{color:#fff9ea;background:#8d674d;box-shadow:0 2px 4px #54362222}.primary:hover:enabled{background:#78553e}.secondary{background:#fff8e9e8;color:#775e43}.secondary:hover:enabled{background:#fffdf3}.primary:disabled,.secondary:disabled{opacity:.48}.text-button{border:0;border-bottom:1px solid #a89372;background:transparent;font-size:13px;padding:5px 2px;white-space:nowrap}.text-button:hover{color:#365f54}.title-art{width:min(520px,70vw);margin:10px auto 13px;line-height:0;filter:drop-shadow(0 5px 3px #3e2e2b35)}.title-art img{width:100%;height:auto}.desk{background:linear-gradient(110deg,#fffaebf5,#f8e9ccee);border:1px solid #c2a477;border-radius:20px;box-shadow:0 12px 35px #39281450,inset 0 0 0 5px #fff9e56b;padding:22px 30px 18px}.desk-head{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #cdb68e;padding-bottom:15px}.eyebrow{font-size:12px;font-weight:400;letter-spacing:.14em;color:#76845a;margin:0 0 7px}.desk-head h2{font-size:25px;letter-spacing:.08em;margin:0 0 6px;font-weight:600}.scope-label{font-size:13px;line-height:1.6;margin:0;color:#8c7450}.stats{display:flex;align-items:center;gap:26px;flex-wrap:wrap;border-bottom:1px solid #cdb68e;padding:12px 0}.stats>div{display:flex;align-items:center;gap:8px}.stats small{font-size:12px;color:#967a56}.stats strong{font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}.stats #restart{margin-left:auto}.stats progress{width:100%;height:5px;border:0;border-radius:3px;overflow:hidden;background:#d9c7a3;accent-color:#81906c}.stats progress::-webkit-progress-bar{background:#d9c7a3}.stats progress::-webkit-progress-value{background:#81906c;transition:width .3s}.work-layout{display:grid;grid-template-columns:minmax(290px,.9fr) minmax(0,1.35fr);gap:35px;padding-top:20px}.card-panel{min-width:0;text-align:center}.card-heading{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 0 10px}.card-heading h3{font-size:18px;margin:0;letter-spacing:.04em}.card-heading span{font-size:11px;border:1px solid #bba378;border-radius:12px;padding:3px 9px;color:#8c7553}.card-zoom{display:block;position:relative;margin:0 auto;border:0;background:transparent;padding:0;line-height:0;width:fit-content;max-width:100%;border-radius:12px}.card-zoom img{display:block;max-width:100%;width:auto;height:min(48vh,455px);min-height:250px;object-fit:contain;filter:drop-shadow(0 7px 6px #4b382831);border-radius:7px}.card-zoom span{position:absolute;right:3px;bottom:3px;background:#fff8e8ef;border:1px solid #bca47a;border-radius:10px;font-size:10px;line-height:1.5;padding:3px 9px;color:#6d5b40}.card-zoom:hover img{filter:drop-shadow(0 8px 7px #4b382851)}.card-zoom .revealed{animation:turn-card .4s ease-out}.image-status{font-size:12px;color:#8e7957;margin:8px 0}.card-panel #flip{font-size:12px}.classification{min-width:0;border-left:1px solid #ceb58c;padding-left:30px}.section-label h3{font-size:20px;margin:0 0 6px;letter-spacing:.06em}.section-label p{font-size:13px;color:#85835b;min-height:22px;margin:0 0 11px;line-height:1.8}.eras{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 12px}.era{border:1.5px solid transparent;background:transparent;border-radius:12px;padding:4px;min-width:0;position:relative;transition:transform .15s,background .15s}.era img{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 2px #67472e2a)}.era small{display:block;font-size:10px;color:#817256;margin:4px 0 0;line-height:1.6}.era.available:hover:enabled{transform:translateY(-2px);background:#f6ebcf80}.era.closed{filter:grayscale(.9);opacity:.38}.era.selected{outline:2px solid #597a67;outline-offset:1px;background:#dce6cf88}.era.correct-era{background:#dce6cf88;border-color:#82986a}.era.wrong-era{border-color:#ae7157;background:#f4dacc88}.actions{display:flex;justify-content:flex-end;gap:12px;padding-top:16px;margin-top:13px;border-top:1px solid #d2bb96}.actions button{min-width:125px}.feedback-paper{min-height:122px;margin-top:17px;padding:29px 36px 20px;display:flex;flex-direction:column;justify-content:center;background:url("網頁用圖/feedback.webp") center/100% 100% no-repeat}.feedback{font-size:14px;line-height:1.9;margin:0;color:#756443}.feedback[data-tone=good]{color:#507347}.feedback[data-tone=wrong]{color:#9a553e}.earned-note{font-size:12px;color:#7a865d;margin:6px 0 0;line-height:1.7}.earned-note:empty{display:none}.reveal-note{background:#e4e8d488;border-left:3px solid #8b9c76;font-size:13px;line-height:1.9;padding:10px 13px;margin:13px 0 0;color:#657450}.scoring-note{text-align:center;font-size:11px;line-height:1.8;color:#9a825e;margin:12px 0 0}.save-status{color:#6c7f51;font-size:12px;line-height:1.8;margin:9px 0 0}.welcome{min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:23px 15px;background:radial-gradient(ellipse,#fff9e2bd,transparent 72%)}.welcome h3{font-family:"DFKai-SB","BiauKai",serif;font-size:34px;font-weight:400;letter-spacing:.06em;margin:16px 0 5px}.welcome p{font-size:15px;line-height:2;color:#927854}.welcome ol{font-size:14px;line-height:2.2;text-align:left;padding-left:22px;color:#81734f}.welcome #start{min-width:185px;margin:10px 0 0}.welcome .config-status{font-size:12px;line-height:1.8;max-width:320px;color:#9a553e}.page-foot{text-align:center;color:#fff7df;text-shadow:0 1px 3px #513c28;font-size:12px;letter-spacing:.12em;margin:14px 0 4px}dialog{color:#584632;width:520px;max-width:92vw;max-height:92dvh;padding:0;overflow:auto;border:1px solid #b49a70;border-radius:16px;background:linear-gradient(120deg,#fffbf0,#f5e5c3);box-shadow:0 25px 90px #31281f55}dialog::backdrop{background:#3c322576;backdrop-filter:blur(3px)}.dialog-content{position:relative;text-align:center;padding:32px 30px 25px}.dialog-content h2{font-size:25px;margin:13px 0;line-height:1.5;letter-spacing:.05em}.dialog-content p{font-size:14px;line-height:1.9;color:#8c7450}.close{position:absolute;top:5px;right:8px;background:transparent;border:0;width:40px;height:40px;font-size:25px;color:#8c7450}.help-list{font-size:14px;line-height:2.1;text-align:left;padding-left:23px}.button-row{display:flex;gap:10px;justify-content:center;margin-top:17px}.button-row button{flex:1}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:19px 0}.result-stats>div{border:1px solid #c9b58c;background:#fff9e8b0;padding:17px 7px;border-radius:9px}.result-stats small{display:block;font-size:12px;color:#937b55;margin-bottom:8px}.result-stats strong{font-size:28px;color:#6d7c51;font-variant-numeric:tabular-nums}.zoom-dialog{width:570px}.zoom-dialog .dialog-content{padding:24px 25px 19px}.zoom-dialog h2{font-size:20px;margin:9px 0 13px}.zoom-dialog img{display:block;width:auto;max-width:100%;height:auto;max-height:68dvh;margin:0 auto 13px;border-radius:7px;object-fit:contain}
+@keyframes turn-card{from{transform:rotateY(80deg);opacity:.3}to{transform:rotateY(0);opacity:1}}
+@media(min-width:1600px){.shell{max-width:1540px;padding-top:20px}.title-art{width:570px}.card-zoom img{height:460px}.desk{padding:25px 35px}.work-layout{gap:45px}.feedback-paper{min-height:140px;padding:35px 40px 26px}.era small{font-size:11px}.eras{gap:16px 14px}}
+@media(max-width:1100px){.shell{padding:13px 3% 10px}.title-art{width:410px;max-width:70vw;margin:6px auto 8px}.desk{padding:18px 20px}.desk-head{padding-bottom:12px}.desk-head h2{font-size:22px}.work-layout{grid-template-columns:minmax(245px,.85fr) minmax(0,1.4fr);gap:22px;padding-top:16px}.classification{padding-left:21px}.card-zoom img{height:385px;min-height:0}.eras{gap:12px 7px}.era{padding:2px}.era small{font-size:9px}.section-label h3{font-size:18px}.section-label p{font-size:12px}.primary,.secondary{font-size:13px;padding:10px 14px}.feedback-paper{padding:27px 27px 18px;min-height:115px}.feedback{font-size:12px}.actions{gap:9px;padding-top:12px;margin-top:11px}.actions button{min-width:110px}.stats{gap:20px}.stats strong{font-size:16px}.card-heading h3{font-size:16px}.welcome{min-height:370px}.scoring-note{font-size:10px}}
+@media(max-width:700px){.shell{padding:10px 12px}.topbar{gap:6px;flex-wrap:wrap}.brand{font-size:11px;padding:9px}.mode{font-size:10px;padding:6px 9px}.topbar button{font-size:11px;min-height:35px;padding:7px 10px}.title-art{width:88vw;max-width:none;margin:12px auto}.desk{padding:17px 14px;border-radius:14px}.desk-head{align-items:flex-start;gap:8px}.desk-head .eyebrow{font-size:10px;letter-spacing:0}.desk-head h2{font-size:20px}.desk-head .text-button{font-size:11px}.scope-label{font-size:11px}.stats{gap:12px;justify-content:space-between;padding:10px 0}.stats>div{display:block}.stats small{display:block;font-size:10px;margin-bottom:4px}.stats strong{font-size:15px}.stats #restart{font-size:11px;margin-left:0}.work-layout{grid-template-columns:1fr;gap:19px}.card-heading{margin-bottom:8px}.card-zoom img{height:auto;width:min(240px,65vw);max-width:100%;min-height:0}.classification{padding:16px 0 0;border-left:0;border-top:1px solid #ceb58c}.section-label h3{font-size:18px}.eras{gap:10px 6px}.era small{font-size:9px}.actions{justify-content:space-between}.actions button{flex:1;min-width:0;font-size:13px}.feedback-paper{min-height:115px;margin-top:14px;padding:28px 25px 19px}.feedback{font-size:12px}.welcome{min-height:310px;padding:10px 3px}.welcome h3{font-size:30px}.welcome p{font-size:13px;margin:10px 0}.welcome ol{font-size:13px;margin:8px 0}.welcome #start{margin-top:10px}.dialog-content{padding:28px 20px 22px}.dialog-content h2{font-size:23px}.dialog-content p,.help-list{font-size:13px}.button-row button{font-size:12px;padding:9px}.zoom-dialog .dialog-content{padding:24px 14px 16px}.page-foot{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* Keep the study illustration behind the whole document, including short viewports. */
+body{position:relative;min-height:100vh}.scene{position:absolute;min-height:100vh;z-index:0}.shell{position:relative;z-index:1}
+.feedback-paper{position:relative;isolation:isolate;background:#fff6de99;border:1px solid #c8b28b;border-radius:12px;padding:20px 24px;min-height:105px}
+.feedback-paper:before{content:"";position:absolute;inset:0;background:url("網頁用圖/feedback.webp") center/contain no-repeat;opacity:.13;z-index:-1;pointer-events:none}
+@media(min-width:1101px) and (max-width:1599px){.card-zoom img{height:clamp(350px,48vh,455px)}}
+.card-zoom span{position:static;display:inline-block;margin-top:7px}
+@media(max-width:700px){.eras{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 8px}}
+
+/* v1.1: keep related labels and controls on the same row. */
+.desk-head>div:first-child{min-width:0;flex:1}.heading-line{display:flex;align-items:baseline;gap:12px 20px;flex-wrap:wrap}.heading-line h2{margin:0;flex-shrink:0}.heading-line .scope-label{margin:0;min-width:0;font-size:13px}
+.round-tools{display:flex;align-items:center;justify-content:flex-end;gap:16px}.round-tools-slot{margin-left:auto}.stats #restart{margin-left:0}
+.section-label{display:flex;align-items:baseline;gap:7px 14px;flex-wrap:wrap;margin-bottom:11px}.section-label h3{margin:0;flex-shrink:0}.section-label p{margin:0;min-height:0;flex:1;min-width:180px;font-size:12px}
+.actions{align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.actions .scoring-note{text-align:left;font-size:11px;line-height:1.8;margin:0;flex:1;min-width:190px}.answer-buttons{display:flex;gap:12px;flex-shrink:0;margin-left:auto}
+@media(max-width:1100px){.heading-line{gap:7px 14px}.heading-line .scope-label{font-size:11px}.round-tools{gap:12px}.section-label{gap:6px 10px}.section-label p{font-size:11px;min-width:150px}.actions{gap:9px}.actions .scoring-note{font-size:10px;min-width:160px}.answer-buttons{gap:9px}.answer-buttons button{min-width:100px}}
+@media(min-width:701px) and (max-width:1100px){.actions .scoring-note{min-width:0}.answer-buttons button{min-width:0;padding:9px 11px;font-size:12px}}
+@media(max-width:700px){.heading-line{gap:6px}.heading-line .scope-label{flex-basis:100%;font-size:11px}.stats .round-tools-slot{margin-left:auto}.round-tools{gap:12px}.round-tools .text-button{font-size:11px}.section-label{display:block}.section-label p{margin-top:6px}.actions .scoring-note{flex-basis:100%;min-width:0;font-size:10px}.answer-buttons{width:100%;margin-left:0}.answer-buttons button{flex:1;min-width:0}.actions{gap:10px}}
+</style></head><body>
+<div class="scene" aria-hidden="true"></div><div class="shell">
+<header class="topbar"><span class="brand">社會科時空探索局</span><span class="mode" id="mode">試玩・本機紀錄</span><button class="secondary" id="home" type="button">返回大地圖</button></header>
+<h1 class="title-art"><img src="網頁用圖/title.webp" alt="時代圖鑑卡牌屋" width="2172" height="724"></h1>
+<main class="desk" aria-label="歷史事件分類工作桌">
+<div class="desk-head"><div><p class="eyebrow">讓每一段故事，找到自己的時代</p><div class="heading-line"><h2>歷史事件分類</h2><p id="scope-label" class="scope-label">載入本次開放範圍…</p></div></div><div id="round-tools" class="round-tools"><button class="text-button" id="help" type="button">玩法與計分</button><button class="text-button" id="restart" type="button" hidden>重新挑戰</button></div></div>
+<section class="stats" id="stats" hidden aria-label="挑戰進度"><div><small>卡牌進度</small><strong id="position">1／12 張</strong></div><div><small>作答時間</small><strong id="timer" role="timer">00:00</strong></div><div><small>分類嘗試</small><strong id="attempts">0 次</strong></div><div id="round-tools-slot" class="round-tools-slot"></div><progress id="progress" value="0" max="12" aria-label="已完成卡牌數"></progress></section>
+<div class="work-layout">
+<section class="card-panel" aria-label="本張事件卡">
+<div class="welcome" id="welcome"><span class="eyebrow">研究員，歡迎來到卡牌屋</span><h3>讀線索，找時代。</h3><p>每個開放時期抽四張卡，<br>混在一起，等你找回歷史的位置。</p><ol><li>看圖片、標題與三個重點。</li><li>選擇右側的時代卷軸。</li><li>確認分類；答對才翻開答案。</li></ol><button class="primary" id="start" type="button" disabled>準備挑戰中…</button><button class="text-button" id="retry-settings" type="button" hidden>重讀開放範圍</button><p class="config-status" id="config-status" role="status"></p></div>
+<div id="card-view" hidden><div class="card-heading"><h3 id="card-title"></h3><span id="face-label">事件正面</span></div><button class="card-zoom" id="zoom" type="button" aria-label="放大事件卡"><img id="card-image" alt="" decoding="async"><span>點卡片放大</span></button><p id="image-status" class="image-status" role="status"></p><button class="secondary" id="retry-image" type="button" hidden>重新載入卡片</button><button class="text-button" id="flip" type="button" hidden>查看題目正面</button></div>
+</section>
+<section class="classification" aria-labelledby="category-title"><div class="section-label"><h3 id="category-title">選擇這張卡的時代</h3><p id="selection" role="status">亮起的卷軸，是這次可以探索的時代。</p></div><div class="eras" id="eras" aria-label="六大時期分類卷軸"></div>
+<div class="actions"><p class="scoring-note">每張卡可重試至答對；首次答對分數最高。<br>同一時期組合，先比分數，同分再比作答時間。</p><div class="answer-buttons"><button class="primary" id="check" type="button" disabled>先選擇時代</button><button class="primary" id="next" type="button" disabled>下一張卡</button></div></div>
+<aside class="feedback-paper" aria-label="研究回饋"><p class="feedback" id="feedback" role="status" aria-live="polite">準備好了嗎？按「開始挑戰」，翻開第一張事件卡。</p><p class="earned-note" id="earned-note"></p></aside><p class="reveal-note" id="reveal-note" hidden></p><p class="save-status" id="inline-save" role="status"></p>
+</section></div></main><p class="page-foot">圖卡裡的線索，串起臺灣的歷史故事。</p></div>
+<dialog id="zoom-dialog" class="zoom-dialog" aria-labelledby="zoom-title"><div class="dialog-content"><button class="close" data-close="zoom-dialog" aria-label="關閉卡片放大" type="button">×</button><h2 id="zoom-title">事件卡</h2><img id="zoom-image" alt=""><button class="secondary" data-close="zoom-dialog" type="button">回到工作桌</button></div></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-content"><button class="close" data-close="help-dialog" aria-label="關閉玩法說明" type="button">×</button><h2 id="help-title">怎麼分類與計分？</h2><ol class="help-list"><li>每個開放時期，隨機抽四張不同事件卡，再混合出題。</li><li>閱讀正面線索，選時代後按「確認分類」。選擇本身不算作答。</li><li>答對才翻到背面；答錯可以繼續看線索、重新選擇。</li><li>每張卡首次、第二次、第三次、第四次以後答對，依序取得 100、80、60、40 分。</li><li>最後依所有卡牌平均成百分制；同一時期組合才比較排名，先比分數，同分再比作答時間。</li></ol><p>閱讀正面、放大卡片、查看本說明及錯誤重試時都計時；圖片載入與答對後閱讀背面不計時。換到下一張才繼續。</p><button class="primary" data-close="help-dialog" type="button">我知道了</button></div></dialog>
+<dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-content"><h2 id="confirm-title"></h2><p id="confirm-text"></p><div class="button-row"><button class="secondary" data-close="confirm-dialog" type="button">繼續這一回合</button><button class="primary" id="confirm-ok" type="button">確定</button></div></div></dialog>
+<dialog id="result-dialog" aria-labelledby="result-title"><div class="dialog-content"><button class="close" data-close="result-dialog" aria-label="返回最後一張卡" type="button">×</button><span class="eyebrow">每一張卡，都找到了位置</span><h2 id="result-title">這趟研究，完成了！</h2><p id="result-scope"></p><div class="result-stats"><div><small>本次成績</small><strong id="result-score"></strong></div><div><small>作答時間</small><strong id="result-time"></strong></div><div><small>首次分類正確</small><strong id="result-first"></strong></div><div><small>分類嘗試</small><strong id="result-attempts"></strong></div></div><p id="result-summary"></p><p class="save-status" id="save-status" role="status"></p><button class="text-button" id="retry-save" type="button" hidden>重試儲存成績</button><div class="button-row"><button class="secondary" data-close="result-dialog" type="button">看最後一張卡</button><button class="primary" id="again" type="button">再挑戰一次</button></div></div></dialog>
+<dialog id="home-dialog" aria-labelledby="home-title"><div class="dialog-content"><h2 id="home-title">返回冒險大地圖</h2><p>這是獨立試玩頁。請切換回原本的大地圖分頁，繼續其他探索。</p><button class="primary" data-close="home-dialog" type="button">繼續研究</button></div></dialog>
+<noscript><p>請啟用 JavaScript，才能進行歷史事件分類。</p></noscript><script>(function(root){
+  'use strict';
+  const RULES='event-cards-retry-100-80-60-40-v1',PER_PERIOD=4;
+  function shuffle(values,random=Math.random){const a=[...values];for(let i=a.length-1;i>0;i--){const j=Math.min(i,Math.max(0,Math.floor(random()*(i+1))));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function settings(data,input){
+    const ids=input?.enabledPeriods??data.defaultPeriods;
+    if(!Array.isArray(ids)||!ids.length||new Set(ids).size!==ids.length||ids.some(id=>!data.periods.some(p=>p.id===id)))throw new Error('請至少開放一個有效時期，時期不可重複。');
+    for(const id of ids){const pool=data.cards.filter(c=>c.periodId===id);if(pool.length<PER_PERIOD||new Set(pool.map(c=>c.id)).size!==pool.length)throw new Error('開放時期的卡池需至少四張不同卡片；目前素材尚未備齊。');}
+    return {revision:typeof input?.revision==='string'?input.revision:'default-v1',enabledPeriods:data.periods.filter(p=>ids.includes(p.id)).map(p=>p.id),cardsPerPeriod:PER_PERIOD};
+  }
+  function createRound(data,input,now=Date.now(),id='',random=Math.random){
+    const config=settings(data,input),chosen=config.enabledPeriods.flatMap(era=>shuffle(data.cards.filter(c=>c.periodId===era),random).slice(0,PER_PERIOD));
+    return {id,config:{...config,enabledPeriods:[...config.enabledPeriods]},bankVersion:data.bankVersion,current:0,startedAt:now,completedAt:null,done:false,activeMs:0,activeSince:null,
+      cards:shuffle(chosen,random).map(c=>({cardId:c.id,periodId:c.periodId,attempts:[],firstCorrect:null,done:false,earnedUnits:0}))};
+  }
+  const current=s=>s.cards[s.current];
+  function pause(s,now=Date.now()){if(s.activeSince!==null){s.activeMs+=Math.max(0,now-s.activeSince);s.activeSince=null;}}
+  function resume(s,now=Date.now()){if(!s.done&&!current(s).done&&s.activeSince===null)s.activeSince=now;}
+  function elapsed(s,now=Date.now()){return s.activeMs+(s.activeSince===null?0:Math.max(0,now-s.activeSince));}
+  function answer(s,periodId,now=Date.now()){
+    const c=current(s);if(s.done||c.done||!s.config.enabledPeriods.includes(periodId))return null;
+    const correct=periodId===c.periodId;c.attempts.push({choice:periodId,correct,at:new Date(now).toISOString()});
+    if(c.firstCorrect===null)c.firstCorrect=correct;
+    if(correct){c.done=true;c.earnedUnits=Math.max(2,6-c.attempts.length);pause(s,now);if(s.cards.every(c=>c.done)){s.done=true;s.completedAt=now;}}
+    return {correct,attempts:c.attempts.length,earnedUnits:c.earnedUnits,done:s.done};
+  }
+  function next(s){if(s.done||!current(s).done||s.current===s.cards.length-1)return false;s.current++;return true;}
+  function result(s){
+    if(!s.done)return null;
+    const total=s.cards.length,earned=s.cards.reduce((n,c)=>n+c.earnedUnits,0),scope=[...s.config.enabledPeriods];
+    return {schemaVersion:1,rulesVersion:RULES,sessionId:s.id,gameId:'event-cards',leaderboardId:'event-cards:'+scope.join('+'),scopeKey:scope.join('+'),enabledPeriods:scope,cardsPerPeriod:PER_PERIOD,settingsRevision:s.config.revision,bankVersion:s.bankVersion,
+      startedAt:new Date(s.startedAt).toISOString(),completedAt:new Date(s.completedAt).toISOString(),questionCount:total,
+      firstAttemptCorrect:s.cards.filter(c=>c.firstCorrect===true).length,firstAttemptAccuracy:s.cards.filter(c=>c.firstCorrect===true).length/total,
+      finalCorrect:s.cards.filter(c=>c.done).length,attemptCount:s.cards.reduce((n,c)=>n+c.attempts.length,0),wrongAttemptCount:s.cards.reduce((n,c)=>n+c.attempts.filter(a=>!a.correct).length,0),
+      score:Math.round(earned/(total*5)*1000)/10,scoreNumerator:earned,scoreDenominator:total*5,activeDurationMs:s.activeMs,durationMs:s.activeMs,durationSeconds:Math.round(s.activeMs/1000),wallDurationMs:Math.max(0,s.completedAt-s.startedAt),
+      resultDetails:s.cards.map(c=>({cardId:c.cardId,periodId:c.periodId,firstAttemptCorrect:c.firstCorrect,attemptCount:c.attempts.length,finalCorrect:c.done,earnedUnits:c.earnedUnits,maxUnits:5,attempts:c.attempts.map(a=>({...a}))}))};
+  }
+  function compare(a,b){if(a.leaderboardId!==b.leaderboardId||a.rulesVersion!==b.rulesVersion)throw new Error('不同時期組合或計分版本不可混排。');return b.scoreNumerator*a.scoreDenominator-a.scoreNumerator*b.scoreDenominator||a.activeDurationMs-b.activeDurationMs||String(a.completedAt).localeCompare(String(b.completedAt));}
+  const api={RULES,PER_PERIOD,shuffle,settings,createRound,current,pause,resume,elapsed,answer,next,result,compare};
+  if(typeof module==='object'&&module.exports)module.exports=api;else root.EventCardsModel=api;
+})(typeof window!=='undefined'?window:globalThis);
+</script><script>window.EventCardsData = {"schemaVersion":1,"bankVersion":"original-pcio-20-v1","defaultPeriods":["prehistoric","dutch","zheng"],"cardsPerPeriod":4,"periods":[{"id":"prehistoric","name":"史前時期","image":"01_史前時期_卷軸.webp"},{"id":"dutch","name":"荷西時期","image":"02_荷西時期_卷軸.webp"},{"id":"zheng","name":"明鄭時期","image":"03_明鄭時期_卷軸.webp"},{"id":"qing","name":"清帝國時期","image":"04_清帝國時期_卷軸.webp"},{"id":"japanese","name":"日治時期","image":"05_日治時期_卷軸.webp"},{"id":"postwar","name":"戰後臺灣","image":"06_戰後臺灣_卷軸.webp"}],"cards":[{"id":"01-1-01","periodId":"prehistoric","title":"長濱文化","clues":["臺東八仙洞遺址","已知用火","打製石器"],"dateLabel":"距今50000年前","front":"01-1-01_front.webp","back":"01-1-01_back.webp","revealNote":""},{"id":"01-1-02","periodId":"prehistoric","title":"新石器革命","clues":["農業出現","畜養動物","定居"],"dateLabel":"距今10000年前","front":"01-1-02_front.webp","back":"01-1-02_back.webp","revealNote":""},{"id":"01-1-03","periodId":"prehistoric","title":"大坌坑文化","clues":["被視為南島語族最早文化","遍及臺灣與中國東南部","發現於淡水河附近之大坌坑遺址而得名"],"dateLabel":"距今6000年前","front":"01-1-03_front.webp","back":"01-1-03_back.webp","revealNote":""},{"id":"01-1-04","periodId":"prehistoric","title":"圓山文化","clues":["臺北盆地及北海岸","碳化稻穗遺跡","出土大量貝塚"],"dateLabel":"距今4500年前","front":"01-1-04_front.webp","back":"01-1-04_back.webp","revealNote":""},{"id":"01-1-05","periodId":"prehistoric","title":"卑南文化","clues":["東亞最大石板棺墓葬群遺址","目前臺灣發現最大的史前聚落","出土精美陪葬玉器、陶器等"],"dateLabel":"距今3500年前","front":"01-1-05_front.webp","back":"01-1-05_back.webp","revealNote":""},{"id":"01-1-06","periodId":"prehistoric","title":"十三行文化","clues":["島外交易行為","人面陶罐","已知煉鐵"],"dateLabel":"距今2000年前","front":"01-1-06_front.webp","back":"01-1-06_back.webp","revealNote":""},{"id":"01-2-01","periodId":"prehistoric","title":"原住民文化","clues":["南島語族","泛靈／多神信仰","歲時祭儀（祭典）"],"dateLabel":"距今2000年前","front":"01-2-01_front.webp","back":"01-2-01_back.webp","revealNote":"本題沿用原卡池的史前分類；原住民族文化持續傳承至今，不只存在於史前。原卡背面時間是教材的整理標記。"},{"id":"02-1-01","periodId":"dutch","title":"福爾摩沙","clues":["地理大發現","歐洲人發現新航路","葡萄牙人發現臺灣"],"dateLabel":"西元1544年","front":"02-1-01_front.webp","back":"02-1-01_back.webp","revealNote":"這張卡是荷西學習模組的航海背景，分類沿用原卡池；不表示卡面所列的 1544 年已進入荷西統治。"},{"id":"02-1-02","periodId":"dutch","title":"建立熱蘭遮城","clues":["荷屬東印度公司","荷人占領臺灣南部","臺南安平古堡"],"dateLabel":"西元1624年","front":"02-1-02_front.webp","back":"02-1-02_back.webp","revealNote":""},{"id":"02-1-03","periodId":"dutch","title":"三貂角地名由來","clues":["西班牙人占領臺灣北部","進行天主教傳教","開採硫磺及輸出鹿皮"],"dateLabel":"西元1626年","front":"02-1-03_front.webp","back":"02-1-03_back.webp","revealNote":""},{"id":"02-1-04","periodId":"dutch","title":"建立聖多明哥城","clues":["原先為西班牙人所建","荷蘭人重建安東尼堡","淡水紅毛城"],"dateLabel":"西元1628年","front":"02-1-04_front.webp","back":"02-1-04_back.webp","revealNote":""},{"id":"02-1-05","periodId":"dutch","title":"新港文書","clues":["羅馬拼音","西拉雅族語言","清代稱為番仔契"],"dateLabel":"西元1636年","front":"02-1-05_front.webp","back":"02-1-05_back.webp","revealNote":""},{"id":"02-1-06","periodId":"dutch","title":"郭懷一事件","clues":["嚴格管制漢人","徵稅過重","臺灣史上最早民變"],"dateLabel":"西元1652年","front":"02-1-06_front.webp","back":"02-1-06_back.webp","revealNote":""},{"id":"02-1-07","periodId":"dutch","title":"建立普羅民遮城","clues":["荷人加強防禦漢人","清代改建中式樓閣","臺南赤崁樓"],"dateLabel":"西元1653年","front":"02-1-07_front.webp","back":"02-1-07_back.webp","revealNote":""},{"id":"03-1-01","periodId":"zheng","title":"第一個漢人政權","clues":["鄭成功率軍攻臺","反清復明根據地","從鹿耳門登陸"],"dateLabel":"西元1661年","front":"03-1-01_front.webp","back":"03-1-01_back.webp","revealNote":""},{"id":"03-1-02","periodId":"zheng","title":"屯田政策","clues":["解決糧食不足問題","軍隊分散開墾荒地","高雄左營"],"dateLabel":"西元1662年","front":"03-1-02_front.webp","back":"03-1-02_back.webp","revealNote":""},{"id":"03-1-03","periodId":"zheng","title":"漢人典章制度移植","clues":["傳播儒家文化","廣設學院","科舉選才"],"dateLabel":"西元1666年","front":"03-1-03_front.webp","back":"03-1-03_back.webp","revealNote":""},{"id":"03-1-04","periodId":"zheng","title":"臺南孔廟落成","clues":["陳永華","明倫堂","全臺首學"],"dateLabel":"西元1666年","front":"03-1-04_front.webp","back":"03-1-04_back.webp","revealNote":""},{"id":"03-1-05","periodId":"zheng","title":"第一份國際通商條約","clues":["突破清廷經濟封鎖","和英國人簽訂","在安平設商館"],"dateLabel":"西元1672年","front":"03-1-05_front.webp","back":"03-1-05_back.webp","revealNote":""},{"id":"03-1-06","periodId":"zheng","title":"臺灣被納入中國版圖","clues":["陳永華病逝","施琅攻打臺灣","鄭克塽投降"],"dateLabel":"西元1683年","front":"03-1-06_front.webp","back":"03-1-06_back.webp","revealNote":"1683 年是鄭氏政權結束、清朝接續治理的時代交界。本題沿用原卡池，歸入明鄭；請把這張卡和下一個時期連起來理解。"}]};</script><script>(function(){
+  'use strict';
+  const M=window.EventCardsModel,D=window.EventCardsData,host=window.SocialGameHost||null,$=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const bank=Object.fromEntries(D.cards.map(c=>[c.id,c])),names=Object.fromEntries(D.periods.map(p=>[p.id,p.name]));
+  const STORE='social-time-explorer:event-cards:retry-v1';
+  let config=M.settings(D),round=null,selected=null,wrongChoice=null,imageReady=false,imageSerial=0,showingBack=false;
+  let identityReady=!host,settingsReady=false,starting=false,saving=false,savedId=null,lastResult=null,memory=[],confirmAction=null;
+  const image=$('card-image'),uid=()=>window.crypto?.randomUUID?.()||'cards-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+  const current=()=>round?bank[M.current(round).cardId]:null;
+  const format=ms=>{const n=Math.max(0,Math.floor(ms/1000));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');};
+  const open=id=>{if(!$(id).open)$(id).showModal();},close=id=>{if($(id).open)$(id).close();};
+  function feedback(text,tone=''){$('feedback').textContent=text;$('feedback').dataset.tone=tone;}
+  function pendingSave(){return !!round?.done&&savedId!==round.id;}
+  function updateStats(){if(!round)return;$('position').textContent=(round.current+1)+'／'+round.cards.length+' 張';$('timer').textContent=format(M.elapsed(round));$('attempts').textContent=round.cards.reduce((n,c)=>n+c.attempts.length,0)+' 次';$('progress').max=round.cards.length;$('progress').value=round.cards.filter(c=>c.done).length;}
+  function showScope(c){$('scope-label').textContent=c.enabledPeriods.map(id=>names[id]).join('・')+'｜每時期四張，共 '+c.enabledPeriods.length*4+' 張';}
+  function drawEras(){
+    const scope=round?round.config:config,card=round?M.current(round):null;
+    $('eras').innerHTML=D.periods.map(p=>{const available=scope.enabledPeriods.includes(p.id);
+      return `<button type="button" class="era ${available?'available':'closed'} ${selected===p.id?'selected':''} ${card?.done&&p.id===card.periodId?'correct-era':''} ${wrongChoice===p.id?'wrong-era':''}" data-era="${p.id}" aria-label="${p.name}${available?'':'，本次未開放'}" aria-pressed="${selected===p.id}" ${!available||!round||card.done||!imageReady?'disabled':''}><img src="../00共用六大時期卷軸/網頁用圖/${esc(p.image)}" alt="${p.name}" width="1090" height="390"></button>`;}).join('');
+  }
+  function controls(){
+    const card=round?M.current(round):null;
+    $('check').disabled=!round||!imageReady||card.done||!selected;
+    $('check').textContent=card?.done?'本張已完成':selected?'確認分類':'先選擇時代';
+    $('next').disabled=!card?.done||!imageReady;$('next').textContent=round?.done?'查看探索成果':'下一張卡';
+    $('zoom').disabled=!imageReady;$('flip').hidden=!card?.done;
+    $('flip').textContent=showingBack?'查看題目正面':'查看答案背面';
+    $('selection').textContent=!round?'亮起的卷軸，是這次可以探索的時代。':card.done?'這張卡已經找到正確的時代。':selected?'已選取「'+names[selected]+'」，再按確認分類。':'先看事件卡，再選擇一張時代卷軸。';
+    drawEras();updateStats();
+  }
+  async function readSettings(){
+    settingsReady=false;$('start').disabled=true;$('retry-settings').hidden=true;$('config-status').textContent='';
+    try{
+      const raw=host&&typeof host.getGameSettings==='function'?await host.getGameSettings('event-cards'):null;
+      if(host&&typeof host.getGameSettings==='function'&&(!raw||!Array.isArray(raw.enabledPeriods)))throw new Error('未取得有效的挑戰範圍。');
+      config=M.settings(D,raw);settingsReady=true;if(!round){showScope(config);drawEras();}
+      $('start').disabled=!identityReady||starting;$('start').textContent=identityReady?'開始挑戰':'請先回大地圖登入';return config;
+    }catch(e){const message=e instanceof Error?e.message:'挑戰範圍載入失敗。';$('config-status').textContent='無法開始：'+message;if(round)$('inline-save').textContent='新回合無法開始：'+message+' 原回合保留。';$('retry-settings').hidden=false;$('start').textContent='請先確認開放範圍';return null;}
+  }
+  async function startRound(){
+    if(starting||saving||!identityReady||pendingSave()){if(pendingSave())showResult();return;}
+    starting=true;$('start').disabled=true;$('start').textContent='準備卡牌中…';
+    const scope=await readSettings();starting=false;
+    if(!scope)return;
+    if(round)M.pause(round);round=M.createRound(D,scope,Date.now(),uid());savedId=null;lastResult=null;
+    close('result-dialog');close('confirm-dialog');$('welcome').hidden=true;$('card-view').hidden=false;$('stats').hidden=false;$('restart').hidden=false;$('round-tools-slot').appendChild($('round-tools'));
+    $('inline-save').textContent='';showScope(round.config);prepareCard();$('card-title').setAttribute('tabindex','-1');$('card-title').focus({preventScroll:true});
+  }
+  function frontAlt(c){return c.title+'。線索：'+c.clues.join('；')+'。';}
+  function setCardImage(back=false){
+    if(!round)return;const c=current(),t=M.current(round);if(back&&!t.done)return;
+    M.pause(round);imageReady=false;showingBack=back;const serial=++imageSerial;
+    $('image-status').textContent='卡片載入中…';$('retry-image').hidden=true;
+    image.alt=back?c.title+'。'+c.dateLabel+'，'+names[c.periodId]+'。'+c.clues.join('；'):frontAlt(c);
+    $('face-label').textContent=back?'答案背面':'事件正面';image.classList.toggle('revealed',back);
+    const loaded=()=>{if(serial!==imageSerial)return;imageReady=true;$('image-status').textContent='';if(!t.done)M.resume(round);controls();};
+    image.onload=loaded;image.onerror=()=>{if(serial!==imageSerial)return;M.pause(round);imageReady=false;$('image-status').textContent='圖片載入失敗，請確認「網頁圖卡」資料夾仍在原位，再重新載入。';$('retry-image').hidden=false;controls();};
+    image.src='網頁圖卡/'+(back?c.back:c.front);controls();
+    if(image.complete&&image.naturalWidth>0)loaded();
+  }
+  function prepareCard(){
+    selected=null;wrongChoice=null;$('card-title').textContent=current().title;$('earned-note').textContent='';$('reveal-note').hidden=true;
+    feedback('看看圖片、標題與卡片下方的三個重點，再選擇時代。');setCardImage(false);
+  }
+  function check(){
+    if(!round||!imageReady||!selected)return;const answer=selected,r=M.answer(round,answer);if(!r)return;
+    selected=null;
+    if(!r.correct){wrongChoice=answer;feedback('再看看喔！可以先參考卡片下方的三個重點，再想想它屬於哪個時期。','wrong');$('earned-note').textContent='本張已嘗試 '+r.attempts+' 次；可以重新選擇。';controls();return;}
+    wrongChoice=null;feedback('分類成功：太好了！這張歷史卡已經放到正確的位置。','good');
+    $('earned-note').textContent='第 '+r.attempts+' 次答對・本張取得 '+r.earnedUnits*20+' 分';
+    $('reveal-note').hidden=!current().revealNote;$('reveal-note').textContent=current().revealNote;
+    setCardImage(true);if(round.done){lastResult=M.result(round);saveResult();}
+  }
+  function zoom(){if(!imageReady)return;$('zoom-title').textContent=current().title+'｜'+(showingBack?'答案背面':'事件正面');$('zoom-image').alt=image.alt;$('zoom-image').src=image.getAttribute('src');open('zoom-dialog');}
+  function records(){try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a.filter(r=>r&&typeof r.sessionId==='string'):[];}catch{return [...memory];}}
+  function saveLocal(record){memory=[...records().filter(r=>r.sessionId!==record.sessionId),record].slice(-200);try{localStorage.setItem(STORE,JSON.stringify(memory));return true;}catch{return false;}}
+  async function saveResult(){
+    if(!lastResult||saving||savedId===lastResult.sessionId)return;const r=lastResult;saving=true;$('again').disabled=true;$('retry-save').hidden=true;
+    let text=host?'正在儲存探索成果…':'';$('save-status').textContent=text;$('inline-save').textContent=text;let failed=false;
+    try{
+      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(r);if(response?.saved!==true||response.sessionId!==r.sessionId)throw new Error('Unconfirmed save');savedId=r.sessionId;text='探索成果已儲存。';}
+      else{const durable=saveLocal({...r,practice:true,identityVerified:false});savedId=r.sessionId;text=durable?'試玩成績已保存在這個瀏覽器；未列入學校排行榜。':'目前只能暫存本次成績；關閉頁面後可能不保留。';}
+    }catch{failed=true;if(host)saveLocal({...r,practice:false,pendingUpload:true});text='成績尚未傳送成功，請保留此頁，按「重試儲存成績」。';}
+    finally{saving=false;if(lastResult?.sessionId===r.sessionId){$('save-status').textContent=text;$('inline-save').textContent=text;$('retry-save').hidden=!failed;$('again').disabled=failed;}}
+  }
+  function showResult(){
+    if(!round?.done)return;lastResult=M.result(round);$('result-score').textContent=Number(lastResult.score.toFixed(1))+' 分';$('result-time').textContent=format(lastResult.durationMs);
+    $('result-first').textContent=lastResult.firstAttemptCorrect+'／'+lastResult.questionCount+' 張';$('result-attempts').textContent=lastResult.attemptCount+' 次';
+    $('result-scope').textContent=lastResult.enabledPeriods.map(id=>names[id]).join('・')+'｜共 '+lastResult.questionCount+' 張';$('result-summary').textContent='全部卡牌已分類完成；分數包含修改後取得的分數。';open('result-dialog');saveResult();
+  }
+  function confirm(title,text,label,action){confirmAction=action;$('confirm-title').textContent=title;$('confirm-text').textContent=text;$('confirm-ok').textContent=label;open('confirm-dialog');}
+  function restart(){if(!round){startRound();return;}if(saving||pendingSave()){showResult();return;}confirm('要重新挑戰嗎？','這會重新抽卡，從第一張重新計分、計時。已完成的舊紀錄仍會保留。','重新抽卡',startRound);}
+  function home(){
+    if(!host?.goHome){open('home-dialog');return;}
+    if(saving||pendingSave()){showResult();return;}
+    const go=()=>{if(round)M.pause(round);host.goHome();};
+    if(round&&!round.done)confirm('要返回冒險大地圖嗎？','這回合尚未完成；返回後不列入成績。','返回大地圖',go);else go();
+  }
+  $('eras').onclick=e=>{const b=e.target.closest('[data-era]');if(!b||b.disabled||!round||M.current(round).done||!imageReady)return;selected=b.dataset.era;wrongChoice=null;controls();$('eras').querySelector('[data-era="'+selected+'"]').focus({preventScroll:true});};
+  $('start').onclick=startRound;$('retry-settings').onclick=readSettings;$('check').onclick=check;$('zoom').onclick=zoom;
+  $('next').onclick=()=>{if(!round||!imageReady)return;if(round.done){showResult();return;}if(M.next(round))prepareCard();};
+  $('flip').onclick=()=>setCardImage(!showingBack);$('retry-image').onclick=()=>setCardImage(showingBack);
+  $('help').onclick=()=>open('help-dialog');$('home').onclick=home;$('restart').onclick=restart;$('again').onclick=restart;$('retry-save').onclick=saveResult;
+  $('confirm-ok').onclick=()=>{const action=confirmAction;confirmAction=null;close('confirm-dialog');action?.();};
+  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>close(b.dataset.close));
+  setInterval(updateStats,500);showScope(config);drawEras();
+  (async()=>{
+    if(host){try{const p=await host.getProfile();if(p?.verified!==true||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;}catch{identityReady=false;$('mode').textContent='請先登入';}}
+    await readSettings();if(!identityReady){$('config-status').textContent='請先回冒險大地圖，以學校 Google 帳號登入。';$('start').disabled=true;}
+  })();
+})();
+</script></body></html>
