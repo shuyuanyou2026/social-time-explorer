@@ -291,7 +291,7 @@
     $('retry-save').hidden=true;$('result-back').disabled=true;$('again').disabled=true;$('finish-back').disabled=true;
     $('save-status').textContent=host?'正在儲存這首歌的探索成果…':'';let message='',failed=false;
     try{
-      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(result);if(response?.saved!==true||response.sessionId!==result.sessionId)throw new Error('Unconfirmed save');savedId=result.sessionId;unlockedSongs.add(result.gameId.slice(5));message='這首歌的探索成果已儲存。';}
+      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(result);if(response?.saved!==true||response.sessionId!==result.sessionId)throw new Error('Unconfirmed save');savedId=result.sessionId;unlockedSongs.add(result.gameId.slice(5));message=response.guest?'訪客試玩完成，不記錄成績。':'這首歌的探索成果已儲存。';}
       else{const durable=saveLocal({...result,practice:true,identityVerified:false});savedId=result.sessionId;unlockedSongs.add(result.gameId.slice(5));message=durable?'試玩成績已保存在這個瀏覽器；未列入學校排行榜。':'目前只能暫存本次成績，關閉網頁後可能不保留。';}
     }catch{if(host)saveLocal({...result,practice:false,pendingUpload:true});message='成績尚未傳送成功，請保留此頁並重試儲存。';failed=true;}
     finally{saving=false;if(lastResult?.sessionId===result.sessionId){$('save-status').textContent=message;$('retry-save').hidden=!failed;$('result-back').disabled=failed;$('again').disabled=failed;$('finish-back').disabled=failed;}}
@@ -345,8 +345,8 @@
   $('answer-content').addEventListener('pointercancel',clearGesture);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selected){selected=null;renderAnswer();}});
   $('retry-song-settings').onclick=readSongSettings;readSongSettings();setInterval(updateStats,500);setInterval(tickVideo,100);
-  if(host){(async()=>{try{const p=await host.getProfile();if(p?.verified!==true||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;$('start-song').disabled=false;$('start-song').textContent='進入這首歌';
-      if(typeof host.getSongUnlocks==='function'){try{const u=await host.getSongUnlocks();if(u?.verified===true&&Array.isArray(u.songIds)){u.songIds.filter(id=>Object.hasOwn(songs,id)).forEach(id=>unlockedSongs.add(id));refreshMvButton();}}catch{/* A failed unlock lookup does not grant access or block playing. */}}
+  if(host){(async()=>{try{const p=await host.getProfile();if((p?.verified!==true&&p?.guest!==true)||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;$('start-song').disabled=false;$('start-song').textContent='進入這首歌';
+      if(typeof host.getSongUnlocks==='function'){try{const u=await host.getSongUnlocks();if((u?.verified===true||u?.guest===true)&&Array.isArray(u.songIds)){u.songIds.filter(id=>Object.hasOwn(songs,id)).forEach(id=>unlockedSongs.add(id));refreshMvButton();}}catch{/* A failed unlock lookup does not grant access or block playing. */}}
     }catch{identityReady=false;$('mode').textContent='請先登入';$('start-song').disabled=true;$('start-song').textContent='請先回大地圖登入';}})();}
 })();
 

@@ -282,7 +282,7 @@
     const record=lastResult;saving=true;$('retry-save').hidden=true;$('again').disabled=true;$('result-back').disabled=true;$('restart').disabled=true;
     $('save-status').textContent=host?'正在儲存探索成果…':'';let message='',failed=false;
     try{
-      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(record);if(response?.saved!==true||response.sessionId!==record.sessionId)throw new Error('Save unconfirmed');savedId=record.sessionId;message='這次探索成果已儲存。';}
+      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(record);if(response?.saved!==true||response.sessionId!==record.sessionId)throw new Error('Save unconfirmed');savedId=record.sessionId;message=response.guest?'訪客試玩完成，不記錄成績。':'這次探索成果已儲存。';}
       else{const durable=saveLocal({...record,practice:true,identityVerified:false});savedId=record.sessionId;message=durable?'試玩成績已保存在這個瀏覽器；未列入學校排行榜。':'目前只能暫存這次試玩成績；關閉頁面後可能不保留。';}
     }catch{if(host)saveLocal({...record,practice:false,pendingUpload:true});message='成績尚未傳送成功，請保留此頁並重試儲存。';failed=true;}
     finally{saving=false;if(lastResult?.sessionId===record.sessionId){$('save-status').textContent=message;$('retry-save').hidden=!failed;$('again').disabled=failed;$('result-back').disabled=failed;$('restart').disabled=failed;}}
@@ -333,7 +333,7 @@
   $('game').addEventListener('pointerup',e=>{if(!gesture||e.pointerId!==gesture.pointerId)return;const g=gesture,target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-target]');clearGesture();if(!g.dragging)return;e.preventDefault();suppressClickUntil=Date.now()+400;if(target){s.selected=g.id;attempt(target.dataset.target);}});
   $('game').addEventListener('pointercancel',clearGesture);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&s?.selected){s.selected=null;render();}});
-  if(host){(async()=>{try{const p=await host.getProfile();if(p?.verified!==true||typeof p.displayName!=='string')throw new Error('Unverified identity');identityReady=true;$('mode').textContent=p.displayName;if(ready){$('start').disabled=false;$('start').textContent='開始探索';}}catch{$('mode').textContent='請先登入';identityReady=false;$('start').disabled=true;$('start').textContent='請先回大地圖登入';}})();}
+  if(host){(async()=>{try{const p=await host.getProfile();if((p?.verified!==true&&p?.guest!==true)||typeof p.displayName!=='string')throw new Error('Unverified identity');identityReady=true;$('mode').textContent=p.displayName;if(ready){$('start').disabled=false;$('start').textContent='開始探索';}}catch{$('mode').textContent='請先登入';identityReady=false;$('start').disabled=true;$('start').textContent='請先回大地圖登入';}})();}
   setInterval(clock,500);
   new ResizeObserver(renderCountyLabels).observe($('taiwan-map'));
 })();

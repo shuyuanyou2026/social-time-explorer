@@ -262,7 +262,7 @@
         const response = await host.saveResult(record);
         if (!response || response.saved !== true || response.sessionId !== record.sessionId) throw new Error('Unconfirmed score save');
         savedRoundId = record.sessionId;
-        message = '這次探索成果已儲存。';
+        message = response.guest ? '訪客試玩完成，不記錄成績。' : '這次探索成果已儲存。';
       } else {
         const durable = saveLocal({ ...record, practice: true, identityVerified: false });
         savedRoundId = record.sessionId;
@@ -425,7 +425,7 @@
       try {
         if (typeof host.getProfile !== 'function') throw new Error('Missing identity');
         const profile = await host.getProfile();
-        if (!profile || profile.verified !== true || typeof profile.displayName !== 'string') throw new Error('Unverified identity');
+        if (!profile || (profile.verified !== true && profile.guest !== true) || typeof profile.displayName !== 'string') throw new Error('Unverified identity');
         identityReady = true; $('mode-label').textContent = profile.displayName;
       } catch {
         $('intro-title').textContent = '請先回大地圖登入';

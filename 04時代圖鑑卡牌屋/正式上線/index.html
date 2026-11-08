@@ -173,7 +173,7 @@ body{position:relative;min-height:100vh}.scene{position:absolute;min-height:100v
     if(!lastResult||saving||savedId===lastResult.sessionId)return;const r=lastResult;saving=true;$('again').disabled=true;$('retry-save').hidden=true;
     let text=host?'正在儲存探索成果…':'';$('save-status').textContent=text;$('inline-save').textContent=text;let failed=false;
     try{
-      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(r);if(response?.saved!==true||response.sessionId!==r.sessionId)throw new Error('Unconfirmed save');savedId=r.sessionId;text='探索成果已儲存。';}
+      if(host){if(typeof host.saveResult!=='function')throw new Error('Missing transport');const response=await host.saveResult(r);if(response?.saved!==true||response.sessionId!==r.sessionId)throw new Error('Unconfirmed save');savedId=r.sessionId;text=response.guest?'訪客試玩完成，不記錄成績。':'探索成果已儲存。';}
       else{const durable=saveLocal({...r,practice:true,identityVerified:false});savedId=r.sessionId;text=durable?'試玩成績已保存在這個瀏覽器；未列入學校排行榜。':'目前只能暫存本次成績；關閉頁面後可能不保留。';}
     }catch{failed=true;if(host)saveLocal({...r,practice:false,pendingUpload:true});text='成績尚未傳送成功，請保留此頁，按「重試儲存成績」。';}
     finally{saving=false;if(lastResult?.sessionId===r.sessionId){$('save-status').textContent=text;$('inline-save').textContent=text;$('retry-save').hidden=!failed;$('again').disabled=failed;}}
@@ -200,7 +200,7 @@ body{position:relative;min-height:100vh}.scene{position:absolute;min-height:100v
   document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>close(b.dataset.close));
   setInterval(updateStats,500);showScope(config);drawEras();
   (async()=>{
-    if(host){try{const p=await host.getProfile();if(p?.verified!==true||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;}catch{identityReady=false;$('mode').textContent='請先登入';}}
+    if(host){try{const p=await host.getProfile();if((p?.verified!==true&&p?.guest!==true)||typeof p.displayName!=='string')throw new Error('Unverified');identityReady=true;$('mode').textContent=p.displayName;}catch{identityReady=false;$('mode').textContent='請先登入';}}
     await readSettings();if(!identityReady){$('config-status').textContent='請先回冒險大地圖，以學校 Google 帳號登入。';$('start').disabled=true;}
   })();
 })();
